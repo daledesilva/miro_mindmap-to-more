@@ -26,7 +26,7 @@ miro.onReady(() => {
 
 
 async function startMindMapConversion() {
-    console.log("Starting mind map conversion 3");
+    console.log("Starting mind map conversion 4");
 
     let mindMap = getMindMap();
 
@@ -70,7 +70,7 @@ async function getMindMap() {
     [siblingGroups, leftEdgeGroups].reduce( function (outGroup, addGroup) {
         Object.keys(addGroup).forEach( function (key) {
             if( outGroup[key] === undefined) {
-                outGroups[key] = addGroup[key];
+                outGroup[key] = addGroup[key];
             } else {
                 if(outGroup[key].length < addGroup[key].length) {
                     outGroup[key] = addGroup[key];
