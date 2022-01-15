@@ -39,12 +39,15 @@ async function getMindMap() {
     // Get selected widgets
     let selectedWidgets = await miro.board.selection.get();
 
+    let siblingGroups = [];
+
     // Filter mindMap from selected widgets
-    // let mindMap = 
-    selectedWidgets.filter((widget) => {
-        console.log(widget)
-        widget.type = 'SHAPE';
+    selectedWidgets.map((widget) => {
+        console.log(widget.text)
+        siblingGroups[widget.bounds.x] = widget;
     })
+
+    console.log('siblingGroups', siblingGroups);
 
 }
 
