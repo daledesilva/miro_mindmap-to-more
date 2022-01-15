@@ -2,28 +2,6 @@
 
 
 
-const getMindMap = () => {
-    // Get selected widgets
-    let selectedWidgets = await miro.board.selection.get();
-
-    // Filter mindMap from selected widgets
-    // let mindMap = 
-    selectedWidgets.filter((widget) => {
-        console.log(widget.type)
-    })
-
-}
-
-const startMindMapConversion = () => {
-    console.log("Starting mind map conversion");
-    
-    let mindMap = getMindMap();
-
-    miro.showNotification('Mind map has been converted')
-}
-
-
-
 
 miro.onReady(() => {
 
@@ -46,6 +24,31 @@ miro.onReady(() => {
 })
 
 
+
+
+
+
+
+
+async function getMindMap() {
+    // Get selected widgets
+    let selectedWidgets = await miro.board.selection.get();
+
+    // Filter mindMap from selected widgets
+    // let mindMap = 
+    selectedWidgets.filter((widget) => {
+        console.log(widget.type)
+    })
+
+}
+
+async function startMindMapConversion() {
+    console.log("Starting mind map conversion");
+
+    let mindMap = getMindMap();
+
+    miro.showNotification('Mind map has been converted')
+}
 
 
 
