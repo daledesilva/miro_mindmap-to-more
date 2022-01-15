@@ -1,4 +1,4 @@
-alert('Hello');
+
 
 miro.onReady(() => {
   
@@ -6,7 +6,7 @@ miro.onReady(() => {
     extensionPoints: {
       
       bottomBar: {
-        title: 'Sticker to shapes',
+        title: 'Mindmap to more',
         svgIcon:
           '<circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2"/>',
         positionPriority: 1,
