@@ -1,1 +1,1 @@
-# miro_mindmap-2-more
+# miro_mindmap-to-more
