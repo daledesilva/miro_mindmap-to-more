@@ -2,7 +2,7 @@
 
 
 
-getMindMap = () => {
+const getMindMap = () => {
     // Get selected widgets
     let selectedWidgets = await miro.board.selection.get();
 
@@ -14,7 +14,7 @@ getMindMap = () => {
 
 }
 
-startMindMapConversion = () => {
+const startMindMapConversion = () => {
     let mindMap = getMindMap();
 }
 
