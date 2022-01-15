@@ -4,8 +4,6 @@
 
 
 miro.onReady(() => {
-
-  startMindMapConversion();
   
   miro.initialize({
     extensionPoints: {
@@ -28,7 +26,7 @@ miro.onReady(() => {
 
 
 async function startMindMapConversion() {
-    console.log("Starting mind map conversion");
+    console.log("Starting mind map conversion 1");
 
     let mindMap = getMindMap();
 
@@ -45,6 +43,7 @@ async function getMindMap() {
     // let mindMap = 
     selectedWidgets.filter((widget) => {
         console.log(widget)
+        widget.type = 'SHAPE';
     })
 
 }
