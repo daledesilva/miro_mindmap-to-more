@@ -27,6 +27,13 @@ miro.onReady(() => {
 
 
 
+async function startMindMapConversion() {
+    console.log("Starting mind map conversion");
+
+    let mindMap = getMindMap();
+
+    miro.showNotification('Mind map has been converted')
+}
 
 
 
@@ -37,18 +44,11 @@ async function getMindMap() {
     // Filter mindMap from selected widgets
     // let mindMap = 
     selectedWidgets.filter((widget) => {
-        console.log(widget.type)
+        console.log(widget)
     })
 
 }
 
-async function startMindMapConversion() {
-    console.log("Starting mind map conversion");
-
-    let mindMap = getMindMap();
-
-    miro.showNotification('Mind map has been converted')
-}
 
 
 
