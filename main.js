@@ -39,15 +39,31 @@ async function getMindMap() {
     // Get selected widgets
     let selectedWidgets = await miro.board.selection.get();
 
-    let siblingGroups = [];
-
-    // Filter mindMap from selected widgets
+    
+    console.log('LEFT EDGE GROUPS');
+    // Group all items aligned by left edge
+    let leftEdgeGroups = [];
     selectedWidgets.map((widget) => {
-        console.log(widget.text)
-        siblingGroups[widget.bounds.x] = widget;
+        // console.log(widget.text)
+        if(leftEdgeGroups[widget.bounds.left] === undefined) {
+            leftEdgeGroups[widget.bounds.left] = [];
+        }
+        leftEdgeGroups[widget.bounds.left].push(widget);
     })
 
-    console.log('siblingGroups', siblingGroups);
+    console.log('RIGHT EDGE GROUPS');
+    // Group all items aligned by right edge
+    let rightEdgeGroups = [];
+    selectedWidgets.map((widget) => {
+        // console.log(widget.text)
+        if(rightEdgeGroups[widget.bounds.right] === undefined) {
+            rightEdgeGroups[widget.bounds.right] = [];
+        }
+        rightEdgeGroups[widget.bounds.right].push(widget);
+    })
+
+    console.log('leftEdgeGroups', leftEdgeGroups);
+    console.log('rightEdgeGroups', rightEdgeGroups);
 
 }
 
