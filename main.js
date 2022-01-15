@@ -15,13 +15,19 @@ const getMindMap = () => {
 }
 
 const startMindMapConversion = () => {
+    console.log("Starting mind map conversion");
+    
     let mindMap = getMindMap();
+
+    miro.showNotification('Mind map has been converted')
 }
 
 
 
 
 miro.onReady(() => {
+
+  startMindMapConversion();
   
   miro.initialize({
     extensionPoints: {
