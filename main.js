@@ -1,5 +1,26 @@
 
 
+
+
+getMindMap = () => {
+    // Get selected widgets
+    let selectedWidgets = await miro.board.selection.get();
+
+    // Filter mindMap from selected widgets
+    // let mindMap = 
+    selectedWidgets.filter((widget) => {
+        console.log(widget.type)
+    })
+
+}
+
+startMindMapConversion = () => {
+    let mindMap = getMindMap();
+}
+
+
+
+
 miro.onReady(() => {
   
   miro.initialize({
@@ -20,40 +41,26 @@ miro.onReady(() => {
 
 
 
-startMindMapConversion = () => {
-    let mindMap = getMindMap();
-}
 
 
-getMindMap = () => {
-    // Get selected widgets
-    let selectedWidgets = await miro.board.selection.get();
-
-    // Filter mindMap from selected widgets
-    // let mindMap = 
-    selectedWidgets.filter((widget) => {
-        console.log(widget.type)
-    })
-
-}
 
 
-otherStuff = () => {
-    // Delete selected stickers
-    await miro.board.widgets.deleteById(stickers.map((sticker) => sticker.id))
+// otherStuff = () => {
+//     // Delete selected stickers
+//     await miro.board.widgets.deleteById(stickers.map((sticker) => sticker.id))
 
-    // Create shapes from selected stickers
-    await miro.board.widgets.create(
-        stickers.map((sticker) => ({
-        type: 'shape',
-        text: sticker.text,
-        x: sticker.x,
-        y: sticker.y,
-        width: sticker.bounds.width,
-        height: sticker.bounds.height,
-        })),
-    )
+//     // Create shapes from selected stickers
+//     await miro.board.widgets.create(
+//         stickers.map((sticker) => ({
+//         type: 'shape',
+//         text: sticker.text,
+//         x: sticker.x,
+//         y: sticker.y,
+//         width: sticker.bounds.width,
+//         height: sticker.bounds.height,
+//         })),
+//     )
 
-    // Show success message
-    miro.showNotification('Mindmap has been converted')
-}
+//     // Show success message
+//     miro.showNotification('Mindmap has been converted')
+// }
