@@ -275,7 +275,7 @@ async function createChildrenBelow(parentNode) {
     // )
 
 
-    parentNode.childNodesAfter.map( (childNode) => {
+    parentNode.childNodesAfter.map( async (childNode) => {
         const newNodes = await miro.board.widgets.create({
             type: 'shape',
             text: childNode.origRef.text,
