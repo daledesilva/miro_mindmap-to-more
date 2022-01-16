@@ -2,6 +2,7 @@
 
 
 const VERT_BUFFER = 50;
+const VERT_BUFFER = 20;
 
 
 
@@ -12,7 +13,7 @@ miro.onReady(() => {
     extensionPoints: {
       
       bottomBar: {
-        title: 'convert mind map 7',
+        title: 'convert mind map 8',
         svgIcon:
           '<circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2"/>',
         positionPriority: 1,
@@ -262,15 +263,15 @@ async function createVerticalMindMap(rootNode) {
 
 
 async function createChildrenBelow(parentNode) {
-    console.log('parentNode.childNodesAfter', parentNode.childNodesAfter);
-
+    
     const childNodes = parentNode.childNodesAfter || parentNode.childNodes;
+    console.log('childNodes', childNodes);
 
-    childNodes.map( async (childNode) => {
+    childNodes.map( async (childNode, index) => {
         const newRefs = await miro.board.widgets.create({
             type: 'shape',
             text: childNode.origRef.text,
-            x: parentNode.newRef.bounds.x + Math.random()*300,
+            x: parentNode.newRef.bounds.x + index*(parentNode.newRef.bounds.width + HORZ_BUFFER),
             y: parentNode.newRef.bounds.bottom + VERT_BUFFER,
             // width: sticker.bounds.width,
             // height: sticker.bounds.height,
