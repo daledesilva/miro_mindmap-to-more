@@ -26,7 +26,7 @@ miro.onReady(() => {
 
 
 async function startMindMapConversion() {
-    console.log("Starting mind map conversion 5");
+    console.log("Starting mind map conversion 6");
 
     let mindMap = getMindMap();
 
@@ -90,6 +90,7 @@ async function getMindMap() {
                 // If it's in a group, then exit this function because we don't want to add it
                 for( k=0; k<rightEdgeGroup.length; k++) {
                     if(rightEdgeGroup[k] === node) {
+                        console.log("Found in a right edge group, so not added to sibling groups");
                         return;
                     }
                 }
