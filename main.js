@@ -26,7 +26,7 @@ miro.onReady(() => {
 
 
 async function startMindMapConversion() {
-    console.log("Starting mind map conversion 4");
+    console.log("Starting mind map conversion 5");
 
     let mindMap = getMindMap();
 
@@ -101,7 +101,7 @@ async function getMindMap() {
     });
 
 
-    
+
     // copy all right edge siblingGroups that have more than 1 in the array, delete all other groups.
 
 
