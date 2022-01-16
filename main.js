@@ -26,17 +26,10 @@ miro.onReady(() => {
 
 
 async function startMindMapConversion() {
-    console.log("Starting mind map conversion 26");
+    console.log("Starting mind map conversion 27");
 
     const mindMap = await getMindMap();
-    miro.showNotification('Mind map found')
-
-    const newOrigin = {
-        x: mindMap.node.bounds.x,
-        y: mindMap.node.bounds.y+200,
-    }
-    createVerticalMindMap(mindMap, newOrigin);
-    miro.showNotification('Mind map converted');
+    await createVerticalMindMap(mindMap);
 }
 
 
@@ -66,7 +59,8 @@ async function getMindMap() {
     console.log( 'groupsToLeft', groupsToLeft);
     console.log( 'groupsToRight', groupsToRight);
     console.log( 'mindMap', mindMap);
-
+    
+    miro.showNotification('Mind map found')
 
 }
 
@@ -229,7 +223,12 @@ function getTopEdge(nodes) {
 
 
 
-function createVerticalMindMap(mindMap, origin) {
+async function createVerticalMindMap(mindMap) {
+
+    const origin = {
+        x: mindMap.node.bounds.x,
+        y: mindMap.node.bounds.y+200,
+    }
 
     // mindMap.node
 
@@ -242,6 +241,7 @@ function createVerticalMindMap(mindMap, origin) {
         // height: sticker.bounds.height,
     })
 
+    miro.showNotification('Mind map converted');
     
 }
 
