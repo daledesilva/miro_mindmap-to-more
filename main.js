@@ -115,7 +115,7 @@ async function getMindMap() {
 
         }
 
-    }
+    });
 
 
 
