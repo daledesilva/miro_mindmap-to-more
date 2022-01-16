@@ -165,9 +165,12 @@ function sortGroupsByDistFromRootNode(nodes, rootNode) {
 
 function getChildNodeTreesFrom(nodesLeft, parentNode) {
 
+    console.log('parentNode', parentNode)
+
     for( k=0; k<nodesLeft.length; k++ ) {
         const highestEdge = getHighestEdge(nodesLeft[k]);
         const lowestEdge = getLowestEdge(nodesLeft[k]);
+        
         if(parentNode.bounds.y > lowestEdge && parentNode.bounds.y < highestEdge) {
             // The group is the closest horizontal group roughly centred around this parent node, so it must be the children
             const childNodes = nodesLeft.splice(k, 1);
