@@ -157,7 +157,7 @@ function removeSubsets(newGroups) {
     // let newGroups = _cloneDeep(groups);
 
     for( groupIndex = 0; groupIndex < newGroups.length; groupIndex++ ) {
-        let group = newGroup[groupIndex];
+        let group = newGroups[groupIndex];
 
         for( nodeIndex=0; nodeIndex<group.length; nodeIndex++ ) {
             console.log(group[nodeIndex].plainText);
