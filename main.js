@@ -26,7 +26,7 @@ miro.onReady(() => {
 
 
 async function startMindMapConversion() {
-    console.log("Starting mind map conversion 23");
+    console.log("Starting mind map conversion 24");
 
     const mindMap = getMindMap();
 
@@ -169,8 +169,8 @@ function getChildNodeTreesFrom(nodesLeft, parentNode) {
     // TODO: Clone nodesLeft so it is immutable
 
     for( k=0; k<nodesLeft.length; k++ ) {
-        const highestEdge = getHighestEdge(nodesLeft[k]);
-        const lowestEdge = getLowestEdge(nodesLeft[k]);
+        const bottomEdge = getBottomEdge(nodesLeft[k]);
+        const topEdge = getTopEdge(nodesLeft[k]);
 
         console.log('parentNode.bounds.top', parentNode.bounds.top);
         console.log('parentNode.bounds.y', parentNode.bounds.y);
@@ -181,7 +181,7 @@ function getChildNodeTreesFrom(nodesLeft, parentNode) {
         console.log('parentNode.bounds.x', parentNode.bounds.y);
         console.log('parentNode.bounds.right', parentNode.bounds.right);
         
-        if(parentNode.bounds.y > lowestEdge && parentNode.bounds.y < highestEdge) {
+        if(parentNode.bounds.y > topEdge && parentNode.bounds.y < bottomEdge) {
             // The group is the closest horizontal group roughly centred around this parent node, so it must be the children
             console.log('nodesLeft before splice', nodesLeft);
             const childNodes = nodesLeft.splice(k, 1)[0];
@@ -208,19 +208,19 @@ function getChildNodeTreesFrom(nodesLeft, parentNode) {
 
 
 
-function getHighestEdge(nodes) {
+function getBottomEdge(nodes) {
     edgeY = -5000000;
     for( let k=0; k<nodes.length; k++) {
-        edgeY = Math.max(nodes[k].bounds.top, edgeY);
+        edgeY = Math.max(nodes[k].bounds.bottom, edgeY);
     }
     return edgeY;
 }
 
 
-function getLowestEdge(nodes) {
+function getTopEdge(nodes) {
     edgeY = 5000000;
     for( let k=0; k<nodes.length; k++) {
-        edgeY = Math.min(nodes[k].bounds.bottom, edgeY);
+        edgeY = Math.min(nodes[k].bounds.top, edgeY);
     }
     return edgeY;
 }
