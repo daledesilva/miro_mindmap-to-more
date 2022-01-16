@@ -12,7 +12,7 @@ miro.onReady(() => {
     extensionPoints: {
       
       bottomBar: {
-        title: 'convert mind map 9',
+        title: 'convert mind map 10',
         svgIcon:
           '<circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2"/>',
         positionPriority: 1,
@@ -247,8 +247,9 @@ async function createVerticalMindMap(mindMap) {
         y: origin.y,
         // width: sticker.bounds.width,
         // height: sticker.bounds.height,
-    })[0] // It's in an array
+    })[0] // Returns an array
 
+    console.log('mindMap.newNode',mindMap.newNode);
     await createChildrenBelow(mindMap);
 
     miro.showNotification('Mind map converted');
@@ -264,7 +265,7 @@ async function createChildrenBelow(mindMap) {
         mindMap.childNodesAfter.map((node) => ({
             type: 'shape',
             text: node.text,
-            x: origin.x + Math.random()*300,
+            x: -150 + Math.random()*300,
             y: mindMap.newNode.bounds.bottom + VERT_BUFFER,
             // width: sticker.bounds.width,
             // height: sticker.bounds.height,
