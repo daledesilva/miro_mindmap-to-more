@@ -26,7 +26,7 @@ miro.onReady(() => {
 
 
 async function startMindMapConversion() {
-    console.log("Starting mind map conversion 16");
+    console.log("Starting mind map conversion 17");
 
     const mindMap = getMindMap();
 
@@ -163,7 +163,7 @@ function sortGroupsByDistFromRootNode(nodes, rootNode) {
 
 
 
-function getChildNodesTreesFrom(nodesLeft, parentNode) {
+function getChildNodeTreesFrom(nodesLeft, parentNode) {
 
     for( k=0; k<nodesLeft.length; k++ ) {
         const highestEdge = getHighestEdge(nodesLeft[k]);
