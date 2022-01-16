@@ -26,7 +26,7 @@ miro.onReady(() => {
 
 
 async function startMindMapConversion() {
-    console.log("Starting mind map conversion 19");
+    console.log("Starting mind map conversion 20");
 
     const mindMap = getMindMap();
 
@@ -174,7 +174,7 @@ function getChildNodeTreesFrom(nodesLeft, parentNode) {
         if(parentNode.bounds.y > lowestEdge && parentNode.bounds.y < highestEdge) {
             // The group is the closest horizontal group roughly centred around this parent node, so it must be the children
             console.log('nodesLeft before splice', nodesLeft);
-            const childNodes = nodesLeft.splice(k, 1);
+            const childNodes = nodesLeft.splice(k, 1)[0];
             const childNodeTrees = [];
 
             console.log('nodesLeft', nodesLeft);
