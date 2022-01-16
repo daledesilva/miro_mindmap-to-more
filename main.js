@@ -26,7 +26,7 @@ miro.onReady(() => {
 
 
 async function startMindMapConversion() {
-    console.log("Starting mind map conversion 12");
+    console.log("Starting mind map conversion 13");
 
     let mindMap = getMindMap();
 
@@ -41,6 +41,12 @@ async function getMindMap() {
 
 
     const rootNode = getRootNode(selectedWidgets);
+
+    const nodesOnRight = getNodesOnRight(selectedWidgets, rootNode);
+    const nodesOnLeft = getNodesOnLeft(selectedWidgets, rootNode);
+
+    console.log('nodesOnRight', nodesOnRight);
+    console.log('nodesOnLeft', nodesOnLeft);
 
     
     // console.log('LEFT EDGE GROUPS');
@@ -162,6 +168,37 @@ function getRootNode(nodes) {
     }
 
 }
+
+
+
+function getNodesOnRight(nodes, rootNode) {
+    const rootX = rootNode.bounds.x;
+    const nodesOnRight = [];
+
+    for(k=0; k<nodes.length; k++) {
+        if(nodes[k].bounds.x > rootX) {
+            nodesOnRight.push(nodes[k]);
+        }
+    }
+
+    return nodesOnRight;
+}
+
+function getNodesOnLeft(nodes, rootNode) {
+    const rootX = rootNode.bounds.x;
+    const nodesOnLeft = [];
+
+    for(k=0; k<nodes.length; k++) {
+        if(nodes[k].bounds.x < rootX) {
+            nodesOnLeft.push(nodes[k]);
+        }
+    }
+
+    return nodesOnLeft;
+}
+
+
+
 
 
 
