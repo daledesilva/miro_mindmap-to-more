@@ -1,7 +1,7 @@
 // import _ from 'lodash';
 
 
-const VERT_BUFFER = 50;
+const VERT_BUFFER = 75;
 const HORZ_BUFFER = 20;
 
 
@@ -294,7 +294,7 @@ async function createChildrenAbove(parentNode) {
             type: 'shape',
             text: childNode.origRef.text,
             x: parentNode.newRef.bounds.x + index*(parentNode.newRef.bounds.width + HORZ_BUFFER),
-            y: parentNode.newRef.bounds.top + VERT_BUFFER,
+            y: parentNode.newRef.bounds.top - VERT_BUFFER,
             // width: sticker.bounds.width,
             // height: sticker.bounds.height,
         })
