@@ -188,6 +188,25 @@ function getChildNodeTreesFrom(nodesLeft, parentNode) {
 
 
 
+function getHighestEdge(nodes) {
+    edgeY = -5000000;
+    for( let k=0; k<nodes.length; k++) {
+        edgeY = Math.max(nodes[k].bounds.top, edgeY);
+    }
+    return edgeY;
+}
+
+
+function getLowestEdge(nodes) {
+    edgeY = 5000000;
+    for( let k=0; k<nodes.length; k++) {
+        edgeY = Math.min(nodes[k].bounds.bottom, edgeY);
+    }
+    return edgeY;
+}
+
+
+
 
 
 
