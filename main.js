@@ -1,6 +1,9 @@
 // import _ from 'lodash';
 
 
+const VERT_BUFFER = 50;
+
+
 
 
 miro.onReady(() => {
@@ -9,7 +12,7 @@ miro.onReady(() => {
     extensionPoints: {
       
       bottomBar: {
-        title: 'convert mind map 8',
+        title: 'convert mind map 9',
         svgIcon:
           '<circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2"/>',
         positionPriority: 1,
@@ -244,9 +247,9 @@ async function createVerticalMindMap(mindMap) {
         y: origin.y,
         // width: sticker.bounds.width,
         // height: sticker.bounds.height,
-    })
+    })[0] // It's in an array
 
-    console.log('mindMap', mindMap);
+    await createChildrenBelow(mindMap);
 
     miro.showNotification('Mind map converted');
     
@@ -255,7 +258,21 @@ async function createVerticalMindMap(mindMap) {
 
 
 
+async function createChildrenBelow(mindMap) {
 
+    await miro.board.widgets.create(
+        mindMap.childNodesAfter.map((node) => ({
+            type: 'shape',
+            text: node.text,
+            x: origin.x + Math.random()*300,
+            y: mindMap.newNode.bounds.bottom + VERT_BUFFER,
+            // width: sticker.bounds.width,
+            // height: sticker.bounds.height,
+        }))
+    )
+
+
+}
 
 
 
