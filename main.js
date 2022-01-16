@@ -29,7 +29,10 @@ async function startMindMapConversion() {
 
     // const mindMap = await getMindMap();
     // await createVerticalMindMap(mindMap);
-    createVerticalMindMap( await getMindMap() );
+
+    getMindMap().then( result => {
+        console.log('result', result);
+    })
 }
 
 
