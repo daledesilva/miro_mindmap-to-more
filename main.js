@@ -47,18 +47,13 @@ async function getMindMap() {
 
     console.log('nodesOnRight', nodesOnRight);
     console.log('nodesOnLeft', nodesOnLeft);
-
     
-    // console.log('LEFT EDGE GROUPS');
-    // // Group all items aligned by left edge
-    // let leftEdgeGroups = [];
-    // selectedWidgets.map((widget) => {
-    //     // console.log(widget.text)
-    //     if(leftEdgeGroups[widget.bounds.left] === undefined) {
-    //         leftEdgeGroups[widget.bounds.left] = [];
-    //     }
-    //     leftEdgeGroups[widget.bounds.left].push(widget);
-    // })
+    const leftEdgeGroups = groupByLeftEdge(nodesOnRight);
+    const rightEdgeGroups = groupByRightEdge(nodesOnLeft);
+    
+    console.log('leftEdgeGroups', leftEdgeGroups);
+    console.log('rightEdgeGroups', rightEdgeGroups);
+
 
     // console.log('RIGHT EDGE GROUPS');
     // // Group all items aligned by right edge
@@ -184,6 +179,8 @@ function getNodesOnRight(nodes, rootNode) {
     return nodesOnRight;
 }
 
+
+
 function getNodesOnLeft(nodes, rootNode) {
     const rootX = rootNode.bounds.x;
     const nodesOnLeft = [];
@@ -197,6 +194,46 @@ function getNodesOnLeft(nodes, rootNode) {
     return nodesOnLeft;
 }
 
+
+
+function groupByLeftEdge(nodes) {
+    const groupDict = [];
+
+    nodes.map((node) => {
+        if(groupDict[node.bounds.left] === undefined) {
+            groupDict[node.bounds.left] = [];
+        }
+        groupDict[node.bounds.left].push(node);
+    })
+
+    const groupArr = [];
+    for(const [key, value] of Object.entries(groupDict)) {
+        groupArr.push(value);
+    }
+
+    return groupArr;
+}
+
+
+function groupByRightEdge(nodes) {
+    const groupDict = [];
+
+    nodes.map((node) => {
+        if(groupDict[node.bounds.right] === undefined) {
+            groupDict[node.bounds.right] = [];
+        }
+        groupDict[node.bounds.right].push(node);
+    })
+
+    const groupArr = [];
+    for(const [key, value] of Object.entries(groupDict)) {
+        groupArr.push(value);
+    }
+
+    return groupArr;
+}
+
+    
 
 
 
