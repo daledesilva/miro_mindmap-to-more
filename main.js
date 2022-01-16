@@ -53,9 +53,9 @@ async function getMindMap() {
     console.log( 'rightEdgeGroups', rightEdgeGroups);
     
     const mindMap = {
-        node = rootNode,
-        childNodesBefore = [],
-        childNodesAfter = [],
+        node: rootNode,
+        childNodesBefore: [],
+        childNodesAfter: [],
     }
 
 
