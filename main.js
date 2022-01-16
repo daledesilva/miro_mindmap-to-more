@@ -120,9 +120,7 @@ async function getMindMap() {
 
 
 
-    // TODO: Update this to be immutable
-    removeSubsets(siblingGroups);
-    // siblingGroups = removeSubsets(siblingGroups);
+    siblingGroups = removeSubsets(siblingGroups);
 
 
 
@@ -151,20 +149,72 @@ async function getMindMap() {
 
 
 // This helps remove subgroups where both edges align (ie. left edge group = 4, right edge group = 2 of those 4)
-function removeSubsets(newGroups) {
+function removeSubsets(origGroups) {
     console.log('removing erroneous subsets');
 
-    // let newGroups = _cloneDeep(groups);
+    const newGroups = [];
 
-    for( groupIndex = 0; groupIndex < newGroups.length; groupIndex++ ) {
-        let group = newGroups[groupIndex];
+    for( groupIndex=0; groupIndex<origGroups.length; groupIndex++ ) {
+        let group = origGroups[groupIndex];
 
-        for( nodeIndex=0; nodeIndex<group.length; nodeIndex++ ) {
-            console.log(group[nodeIndex].plainText);
+        // Compare with all other groups
+        for( compareGroupIndex=groupIndex+1; compareGroupIndex<origGroups.length; compareGroupIndex++ ) {
+            let compareGroup = origGroups[compareGroupIndex];
+
+            if( oneIsSubset(group, compareGroup) ) {
+                // Add the greater group only
+                if(group.length > compareGroup.length) {
+                    newGroups.push(group);    
+                } else {
+                    newGroups.push(compareGroup);
+                }
+            } else {
+                newGroups.push(group);
+            }
+
         }
 
     }
+
+    return newGroups;
 }
+
+
+function oneIsSubset(group1, group2) {
+
+    for( nodeIndex=0; nodeIndex<group1.length; nodeIndex++ ) {
+        const curNode = group1[nodeIndex];
+
+        for( compareNodeIndex=0; compareNodeIndex<group2.length; compareNodeIndex++ ) {
+            const compareNode = group2[compareNodeIndex];
+            if(curNode === compareNode) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+
+}
+
+
+
+// for( nodeIndex=0; nodeIndex<group.length; nodeIndex++ ) {
+//     const curNode = group[nodeIndex];
+//     console.log(curNode.plainText);
+
+//     // Check against all other nodes
+//     for( compareGroupIndex=groupIndex+1; compareGroupIndex<origGroups.length; compareGroupIndex++ ) {
+//         let compareGroup = origGroups[compareGroupIndex];
+
+//         for( compareNodeIndex=0; compareNodeIndex<compareGroup.length; compareNodeIndex++ ) {
+//             const compareNode = compareGroup[compareNodeIndex];
+//             if(curNode == compareNode) {
+//                 // The node exists in 2 spots, so check which one is a larger group
+//             }
+//         }
+//     }
+// }
 
 
 
