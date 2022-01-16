@@ -12,7 +12,7 @@ miro.onReady(() => {
     extensionPoints: {
       
       bottomBar: {
-        title: 'convert mind map 3',
+        title: 'convert mind map 4',
         svgIcon:
           '<circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2"/>',
         positionPriority: 1,
@@ -59,7 +59,7 @@ async function getMindMap() {
 
     
     const mindMap = {
-        node: rootNode,
+        origRef: rootNode,
         childNodesBefore: getChildNodeTreesFrom(groupsToLeft, rootNode),
         childNodesAfter: getChildNodeTreesFrom(groupsToRight, rootNode),
     }
