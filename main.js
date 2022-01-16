@@ -26,7 +26,7 @@ miro.onReady(() => {
 
 
 async function startMindMapConversion() {
-    console.log("Starting mind map conversion 9");
+    console.log("Starting mind map conversion 10");
 
     let mindMap = getMindMap();
 
@@ -119,7 +119,7 @@ async function getMindMap() {
     });
 
 
-
+    console.log('siblingGroups before subset removal', siblingGroups);
     siblingGroups = removeSubsets(siblingGroups);
 
 
@@ -198,23 +198,6 @@ function oneIsSubset(group1, group2) {
 }
 
 
-
-// for( nodeIndex=0; nodeIndex<group.length; nodeIndex++ ) {
-//     const curNode = group[nodeIndex];
-//     console.log(curNode.plainText);
-
-//     // Check against all other nodes
-//     for( compareGroupIndex=groupIndex+1; compareGroupIndex<origGroups.length; compareGroupIndex++ ) {
-//         let compareGroup = origGroups[compareGroupIndex];
-
-//         for( compareNodeIndex=0; compareNodeIndex<compareGroup.length; compareNodeIndex++ ) {
-//             const compareNode = compareGroup[compareNodeIndex];
-//             if(curNode == compareNode) {
-//                 // The node exists in 2 spots, so check which one is a larger group
-//             }
-//         }
-//     }
-// }
 
 
 
