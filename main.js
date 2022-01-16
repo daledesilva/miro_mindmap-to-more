@@ -1,4 +1,4 @@
-
+import _ from 'lodash';
 
 
 
@@ -26,7 +26,7 @@ miro.onReady(() => {
 
 
 async function startMindMapConversion() {
-    console.log("Starting mind map conversion 8");
+    console.log("Starting mind map conversion 9");
 
     let mindMap = getMindMap();
 
@@ -67,8 +67,9 @@ async function getMindMap() {
 
 
 
-    // TODO
     // Remove nodes that are already represented in a group
+    /////////////////
+
     let siblingGroups = [];
 
     // check through all left edge siblingGroups, if it has only 1 in the array, check the right edge groups for the same Object, if it exists in a group by itself there tool, then keep it, otherwise, delete it.
@@ -119,28 +120,49 @@ async function getMindMap() {
 
 
 
+    siblingGroups = removeSubsets(siblingGroups);
 
 
 
-    // let siblingGroups = rightEdgeGroups;
-    // [siblingGroups, leftEdgeGroups].reduce( function (outGroup, addGroup) {
-    //     Object.keys(addGroup).forEach( function (key) {
-    //         // if( outGroup[key] === undefined) {
-    //         //     outGroup[key] = addGroup[key];
-    //         // } else {
-    //         //     if(outGroup[key].length < addGroup[key].length) {
-    //         //         outGroup[key] = addGroup[key];
-    //         //     }
-    //         // }
-    //     });
-    //     return outGroup;
-    // }, {});
+
+
+    // Issues:
+    // It will still break for single nodes that align on both edges - these will always get grouped when they shouldn't.
+    
+    // It will still break when all nodes in a group align - as it won't know whether left aligned or right aligned is the correct one 
+    // - this could be solved further by...
+    // 1. Checking which side of root node it's on (This would dictate left or right)
+    // 2. If both still same side, checking the distribution of notes
+
+
+
+
+    // If a single node's border colour doesn't equal "transparent", then it's the root node
+
 
     console.log('siblingGroups', siblingGroups);
 
 }
 
 
+
+
+
+// This helps remove subgroups where both edges align (ie. left edge group = 4, right edge group = 2 of those 4)
+function removeSubsets(groups) {
+    console.log('removing erroneous subsets');
+
+    let newGroups = _cloneDeep(groups);
+
+    for( groupIndex = 0; groupIndex < newGroups.length; groupIndex++ ) {
+        let group = newGroup[groupIndex];
+
+        for( nodeIndex=0; nodeIndex<group.length; nodeIndex++ ) {
+            console.log(group[nodeIndex].plainText);
+        }
+
+    }
+}
 
 
 
