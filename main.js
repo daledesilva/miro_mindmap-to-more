@@ -28,12 +28,12 @@ miro.onReady(() => {
 async function startMindMapConversion() {
     console.log("Starting mind map conversion 25");
 
-    const mindMap = getMindMap();
+    const mindMap = await getMindMap();
     miro.showNotification('Mind map found')
 
     const newOrigin = {
-        x: 0,//mindMap.node.bounds.x,
-        y: 200,//mindMap.node.bounds.y+200,
+        x: mindMap.node.bounds.x,
+        y: mindMap.node.bounds.y+200,
     }
     createVerticalMindMap(mindMap, newOrigin);
     miro.showNotification('Mind map converted')
