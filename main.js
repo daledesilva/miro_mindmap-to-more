@@ -154,10 +154,12 @@ function removeSubsets(origGroups) {
 
     const newGroups = [];
 
+    groupLoop:
     for( groupIndex=0; groupIndex<origGroups.length; groupIndex++ ) {
         let group = origGroups[groupIndex];
 
         // Compare with all other groups
+        compareGroupLoop:
         for( compareGroupIndex=groupIndex+1; compareGroupIndex<origGroups.length; compareGroupIndex++ ) {
             let compareGroup = origGroups[compareGroupIndex];
 
@@ -168,11 +170,15 @@ function removeSubsets(origGroups) {
                 } else {
                     newGroups.push(compareGroup);
                 }
-            } else {
-                newGroups.push(group);
-            }
+                
+                // continue to the next group
+                continue groupLoop;
 
+            }
         }
+
+        // It wasn';t a subset, so add it
+        newGroups.push(group);
 
     }
 
