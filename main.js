@@ -1,4 +1,4 @@
-import _ from 'lodash';
+// import _ from 'lodash';
 
 
 
@@ -120,7 +120,9 @@ async function getMindMap() {
 
 
 
-    siblingGroups = removeSubsets(siblingGroups);
+    // TODO: Update this to be immutable
+    removeSubsets(siblingGroups);
+    // siblingGroups = removeSubsets(siblingGroups);
 
 
 
@@ -149,10 +151,10 @@ async function getMindMap() {
 
 
 // This helps remove subgroups where both edges align (ie. left edge group = 4, right edge group = 2 of those 4)
-function removeSubsets(groups) {
+function removeSubsets(newGroups) {
     console.log('removing erroneous subsets');
 
-    let newGroups = _cloneDeep(groups);
+    // let newGroups = _cloneDeep(groups);
 
     for( groupIndex = 0; groupIndex < newGroups.length; groupIndex++ ) {
         let group = newGroup[groupIndex];
