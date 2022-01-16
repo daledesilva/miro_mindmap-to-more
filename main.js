@@ -238,8 +238,6 @@ async function createVerticalMindMap(mindMap) {
         y: mindMap.node.bounds.y+1000,
     }
 
-    // mindMap.node
-
     mindMap.newNode = await miro.board.widgets.create({
         type: 'shape',
         text: mindMap.node.text,
@@ -247,7 +245,7 @@ async function createVerticalMindMap(mindMap) {
         y: origin.y,
         // width: sticker.bounds.width,
         // height: sticker.bounds.height,
-    })[0] // Returns an array
+    }) // Returns an array
 
     console.log('mindMap.newNode',mindMap.newNode);
     await createChildrenBelow(mindMap);
