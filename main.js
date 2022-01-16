@@ -43,25 +43,22 @@ async function getMindMap() {
     const nodesOnRight = getNodesOnRight(selectedWidgets, rootNode);
     const nodesOnLeft = getNodesOnLeft(selectedWidgets, rootNode);
 
-    const leftEdgeGroups = groupByLeftEdge(nodesOnRight);
-    const rightEdgeGroups = groupByRightEdge(nodesOnLeft);
+    const groupsToRight = groupByLeftEdge(nodesOnRight);
+    const groupsToLeft = groupByRightEdge(nodesOnLeft);
 
     sortGroupsByDistFromRootNode(leftEdgeGroups, rootNode);
     sortGroupsByDistFromRootNode(rightEdgeGroups, rootNode);
 
-    console.log( 'leftEdgeGroups', leftEdgeGroups);
-    console.log( 'rightEdgeGroups', rightEdgeGroups);
     
     const mindMap = {
         node: rootNode,
-        childNodesBefore: [],
-        childNodesAfter: [],
+        childNodesBefore: getChildNodeTreesFrom(groupsToRight, rootNode),
+        childNodesAfter: getChildNodeTreesFrom(groupsToLeft, rootNode),
     }
 
 
-
-
 }
+
 
 
 
@@ -164,6 +161,28 @@ function sortGroupsByDistFromRootNode(nodes, rootNode) {
 
 
 
+function getChildNodesTreesFrom(nodesLeft, parentNode) {
+
+    for( k=0; k<nodesLeft.length; k++ ) {
+        const highestEdge = getHighestEdge(nodesLeft[k]);
+        const lowestEdge = getLowestEdge(nodesLeft[k]);
+        if(parentNode.bounds.y > lowestEdge && parentNode.bounds.y < highestEdge) {
+            // The group is the closest horizontal group roughly centred around this parent node, so it must be the children
+            const childNodes = nodesLeft.splice(k, 1);
+            const childNodeTrees = [];
+
+            for( let j=0; j<childNodes.length; j++ ) {
+                childNodeTrees.push({
+                    node: childNodes[j],
+                    plainText: childNodes[j].plainText,
+                    childNodes: getChildNodeTreesFrom(nodesLeft, childNodes[j]),
+                });
+            }
+            return childNodeTrees;
+        }
+    }
+
+}
 
 
 
