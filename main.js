@@ -12,7 +12,7 @@ miro.onReady(() => {
     extensionPoints: {
       
       bottomBar: {
-        title: 'convert mind map 2',
+        title: 'convert mind map 3',
         svgIcon:
           '<circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2"/>',
         positionPriority: 1,
@@ -191,7 +191,7 @@ function getChildNodeTreesFrom(nodesLeft, parentNode) {
 
             for( let j=0; j<childNodes.length; j++ ) {
                 childNodeTrees.push({
-                    node: childNodes[j],
+                    origRef: childNodes[j],
                     plainText: childNodes[j].plainText,
                     childNodes: getChildNodeTreesFrom(nodesLeft, childNodes[j]),
                 });
@@ -233,26 +233,26 @@ function getTopEdge(nodes) {
 
 
 
-async function createVerticalMindMap(mindMap) {
+async function createVerticalMindMap(rootNode) {
 
     const origin = {
-        x: mindMap.node.bounds.x,
-        y: mindMap.node.bounds.y+1000,
+        x: rootNode.origRef.bounds.x,
+        y: rootNode.origRef.bounds.y+1000,
     }
 
     const newNodes = await miro.board.widgets.create({
         type: 'shape',
-        text: mindMap.node.text,
+        text: rootNode.origRef.text,
         x: origin.x,
         y: origin.y,
         // width: sticker.bounds.width,
         // height: sticker.bounds.height,
     })
 
-    mindMap.newNode = newNodes[0];
+    rootNode.newRef = newNodes[0];
 
-    console.log('mindMap.newNode',mindMap.newNode);
-    await createChildrenBelow(mindMap);
+    console.log('rootNode.newRef',rootNode.newRef);
+    await createChildrenBelow(rootNode);
 
     
     
@@ -261,14 +261,14 @@ async function createVerticalMindMap(mindMap) {
 
 
 
-async function createChildrenBelow(mindMap) {
+async function createChildrenBelow(parentNode) {
 
     await miro.board.widgets.create(
-        mindMap.childNodesAfter.map((node) => ({
+        parentNode.childNodesAfter.map((childNode) => ({
             type: 'shape',
-            text: node.text,
+            text: childNode.origRef.text,
             x: -150 + Math.random()*300,
-            y: mindMap.newNode.bounds.bottom + VERT_BUFFER,
+            y: parentNode.newRef.bounds.bottom + VERT_BUFFER,
             // width: sticker.bounds.width,
             // height: sticker.bounds.height,
         }))
