@@ -26,7 +26,7 @@ miro.onReady(() => {
 
 
 async function startMindMapConversion() {
-    console.log("Starting mind map conversion 17");
+    console.log("Starting mind map conversion 18");
 
     const mindMap = getMindMap();
 
