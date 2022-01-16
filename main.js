@@ -262,26 +262,16 @@ async function createVerticalMindMap(rootNode) {
 
 
 async function createChildrenBelow(parentNode) {
-
-    // await miro.board.widgets.create(
-    //     parentNode.childNodesAfter.map((childNode) => ({
-    //         type: 'shape',
-    //         text: childNode.origRef.text,
-    //         x: parentNode.newRef.bounds.x + Math.random()*300,
-    //         y: parentNode.newRef.bounds.bottom + VERT_BUFFER,
-    //         // width: sticker.bounds.width,
-    //         // height: sticker.bounds.height,
-    //     }))
-    // )
-
     console.log('parentNode.childNodesAfter', parentNode.childNodesAfter);
 
-    parentNode.childNodesAfter.map( async (childNode) => {
+    const childNodes = parentNode.childNodesAfter || parentNode.childNodes;
+
+    childNodes.map( async (childNode) => {
         const newRefs = await miro.board.widgets.create({
             type: 'shape',
             text: childNode.origRef.text,
             x: parentNode.newRef.bounds.x + Math.random()*300,
-            y: parentNode.newRef.bounds.bottom + VERT_BUFFER,
+            top: parentNode.newRef.bounds.bottom + VERT_BUFFER,
             // width: sticker.bounds.width,
             // height: sticker.bounds.height,
         })
