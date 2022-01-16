@@ -1,8 +1,8 @@
 // import _ from 'lodash';
 
 
-const VERT_BUFFER = 75;
-const HORZ_BUFFER = 20;
+const VERT_BUFFER = 60;
+const HORZ_BUFFER = 30;
 
 
 
@@ -13,7 +13,7 @@ miro.onReady(() => {
     extensionPoints: {
       
       bottomBar: {
-        title: 'convert mind map 1',
+        title: 'convert mind map 2',
         svgIcon:
           '<circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2"/>',
         positionPriority: 1,
@@ -33,13 +33,11 @@ async function startMindMapConversion() {
 
     const mindMap = await getMindMap();
     await createVerticalMindMap(mindMap);
+    await createVerticalMindMap(mindMap);
 
     miro.showNotification('Mind map converted');
-
-    // getMindMap().then( result => {
-    //     console.log('result', result);
-    //     createVerticalMindMap(result);
-    // })
+    
+    console.log('mindMap', mindMap)
 }
 
 
@@ -66,9 +64,9 @@ async function getMindMap() {
     }
 
 
-    console.log( 'groupsToLeft', groupsToLeft);
-    console.log( 'groupsToRight', groupsToRight);
-    console.log( 'mindMap', mindMap);
+    // console.log( 'groupsToLeft', groupsToLeft);
+    // console.log( 'groupsToRight', groupsToRight);
+    // console.log( 'mindMap', mindMap);
     
     miro.showNotification('Mind map found')
 
@@ -252,7 +250,6 @@ async function createVerticalMindMap(rootNode) {
 
     rootNode.newRef = newRefs[0];
 
-    console.log('rootNode.newRef',rootNode.newRef);
     await createChildrenBelow(rootNode);
     await createChildrenAbove(rootNode);
 
@@ -266,7 +263,6 @@ async function createVerticalMindMap(rootNode) {
 async function createChildrenBelow(parentNode) {
     
     const childNodes = parentNode.childNodesAfter || parentNode.childNodes;
-    console.log('childNodes', childNodes);
 
     childNodes.map( async (childNode, index) => {
         const newRefs = await miro.board.widgets.create({
@@ -287,7 +283,6 @@ async function createChildrenBelow(parentNode) {
 async function createChildrenAbove(parentNode) {
     
     const childNodes = parentNode.childNodesBefore || parentNode.childNodes;
-    // console.log('childNodes', childNodes);
 
     childNodes.map( async (childNode, index) => {
         const newRefs = await miro.board.widgets.create({
