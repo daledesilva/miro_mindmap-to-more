@@ -9,7 +9,7 @@ miro.onReady(() => {
     extensionPoints: {
       
       bottomBar: {
-        title: 'convert mind map 3',
+        title: 'convert mind map 5',
         svgIcon:
           '<circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2"/>',
         positionPriority: 1,
@@ -32,6 +32,7 @@ async function startMindMapConversion() {
 
     getMindMap().then( result => {
         console.log('result', result);
+        createVerticalMindMap(result);
     })
 }
 
@@ -65,6 +66,7 @@ async function getMindMap() {
     
     miro.showNotification('Mind map found')
 
+    return mindMap;
 }
 
 
