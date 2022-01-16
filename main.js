@@ -83,14 +83,14 @@ async function getMindMap() {
             let node = leftEdgeGroups[leftKey][0];
 
             for (const [rightKey, rightEdgeGroup] of Object.entries(rightEdgeGroups)) {
-                console.logI('Checking node against those in rightEdgeGroup ' + rightKey);
+                // console.log('Checking node against those in rightEdgeGroup ' + rightKey);
 
                 // If it's just got one node, than skip it
                 if(rightEdgeGroup.length <= 1)  continue;
 
                 // If it's in a group, then exit this function because we don't want to add it
                 for( k=0; k<rightEdgeGroup.length; k++) {
-                    console.log("iterating through right edge group");
+                    // console.log("iterating through right edge group");
 
                     if(rightEdgeGroup[k] === node) {
                         console.log("Found in a right edge group, so not added to sibling groups");
