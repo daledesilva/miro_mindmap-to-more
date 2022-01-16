@@ -26,7 +26,7 @@ miro.onReady(() => {
 
 
 async function startMindMapConversion() {
-    console.log("Starting mind map conversion 14");
+    console.log("Starting mind map conversion 15");
 
     const mindMap = getMindMap();
 
@@ -56,6 +56,8 @@ async function getMindMap() {
         childNodesAfter: getChildNodeTreesFrom(groupsToLeft, rootNode),
     }
 
+
+    console.log( 'mindMap', mindMap);
 
 }
 
