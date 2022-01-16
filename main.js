@@ -66,19 +66,63 @@ async function getMindMap() {
     console.log('rightEdgeGroups', rightEdgeGroups);
 
 
-    let siblingGroups = rightEdgeGroups;
-    [siblingGroups, leftEdgeGroups].reduce( function (outGroup, addGroup) {
-        Object.keys(addGroup).forEach( function (key) {
-            if( outGroup[key] === undefined) {
-                outGroup[key] = addGroup[key];
-            } else {
-                if(outGroup[key].length < addGroup[key].length) {
-                    outGroup[key] = addGroup[key];
+
+    // TODO
+    // Remove nodes that are already represented in a group
+    let siblingGroups = [];
+
+    // check through all left edge siblingGroups, if it has only 1 in the array, check the right edge groups for the same Object, if it exists in a group by itself there tool, then keep it, otherwise, delete it.
+    Object.keys(leftEdgeGroups).forEach( function (leftKey) {
+
+        if(leftEdgeGroups[leftKey].length > 1) {
+            // If it's a group of nodes, then add it to the new array
+            siblingGroups.push(leftEdgeGroups[leftKey]);
+
+        } else {
+            // If it's a single node, check if it's got a group in the right edge list, if it does, don't add it.
+            let node = leftEdgeGroups[leftKey][0];
+
+            for (const [rightKey, rightEdgeGroup] of Object.entries(rightEdgeGroups)) {
+
+                // If it's just got one node, than skip it
+                if(rightEdgeGroup.length <= 1)  continue;
+
+                // If it's in a group, then exit this function because we don't want to add it
+                for( k=0; k<rightEdgeGroup.length; k++) {
+                    if(rightEdgeGroup[k] === node) {
+                        return;
+                    }
                 }
             }
-        });
-        return outGroup;
-    }, {});
+
+            // Since it wasn't found in a right edge group, then add it as a group of 1
+            siblingGroups.push(leftEdgeGroups[leftKey]);
+        }
+    });
+
+
+    
+    // copy all right edge siblingGroups that have more than 1 in the array, delete all other groups.
+
+
+
+
+
+
+
+    // let siblingGroups = rightEdgeGroups;
+    // [siblingGroups, leftEdgeGroups].reduce( function (outGroup, addGroup) {
+    //     Object.keys(addGroup).forEach( function (key) {
+    //         // if( outGroup[key] === undefined) {
+    //         //     outGroup[key] = addGroup[key];
+    //         // } else {
+    //         //     if(outGroup[key].length < addGroup[key].length) {
+    //         //         outGroup[key] = addGroup[key];
+    //         //     }
+    //         // }
+    //     });
+    //     return outGroup;
+    // }, {});
 
     console.log('siblingGroups', siblingGroups);
 
