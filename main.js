@@ -26,7 +26,7 @@ miro.onReady(() => {
 
 
 async function startMindMapConversion() {
-    console.log("Starting mind map conversion 10");
+    console.log("Starting mind map conversion 12");
 
     let mindMap = getMindMap();
 
@@ -39,88 +39,91 @@ async function getMindMap() {
     // Get selected widgets
     let selectedWidgets = await miro.board.selection.get();
 
+
+    const rootNode = getRootNode(selectedWidgets);
+
     
-    console.log('LEFT EDGE GROUPS');
-    // Group all items aligned by left edge
-    let leftEdgeGroups = [];
-    selectedWidgets.map((widget) => {
-        // console.log(widget.text)
-        if(leftEdgeGroups[widget.bounds.left] === undefined) {
-            leftEdgeGroups[widget.bounds.left] = [];
-        }
-        leftEdgeGroups[widget.bounds.left].push(widget);
-    })
+    // console.log('LEFT EDGE GROUPS');
+    // // Group all items aligned by left edge
+    // let leftEdgeGroups = [];
+    // selectedWidgets.map((widget) => {
+    //     // console.log(widget.text)
+    //     if(leftEdgeGroups[widget.bounds.left] === undefined) {
+    //         leftEdgeGroups[widget.bounds.left] = [];
+    //     }
+    //     leftEdgeGroups[widget.bounds.left].push(widget);
+    // })
 
-    console.log('RIGHT EDGE GROUPS');
-    // Group all items aligned by right edge
-    let rightEdgeGroups = [];
-    selectedWidgets.map((widget) => {
-        // console.log(widget.text)
-        if(rightEdgeGroups[widget.bounds.right] === undefined) {
-            rightEdgeGroups[widget.bounds.right] = [];
-        }
-        rightEdgeGroups[widget.bounds.right].push(widget);
-    })
+    // console.log('RIGHT EDGE GROUPS');
+    // // Group all items aligned by right edge
+    // let rightEdgeGroups = [];
+    // selectedWidgets.map((widget) => {
+    //     // console.log(widget.text)
+    //     if(rightEdgeGroups[widget.bounds.right] === undefined) {
+    //         rightEdgeGroups[widget.bounds.right] = [];
+    //     }
+    //     rightEdgeGroups[widget.bounds.right].push(widget);
+    // })
 
-    console.log('leftEdgeGroups', leftEdgeGroups);
-    console.log('rightEdgeGroups', rightEdgeGroups);
-
-
-
-    // Remove nodes that are already represented in a group
-    /////////////////
-
-    let siblingGroups = [];
-
-    // check through all left edge siblingGroups, if it has only 1 in the array, check the right edge groups for the same Object, if it exists in a group by itself there tool, then keep it, otherwise, delete it.
-    Object.keys(leftEdgeGroups).forEach( function (leftKey) {
-
-        if(leftEdgeGroups[leftKey].length > 1) {
-            // If it's a group of nodes, then add it to the new array
-            siblingGroups.push(leftEdgeGroups[leftKey]);
-
-        } else {
-            // If it's a single node, check if it's got a group in the right edge list, if it does, don't add it.
-            let node = leftEdgeGroups[leftKey][0];
-
-            for (const [rightKey, rightEdgeGroup] of Object.entries(rightEdgeGroups)) {
-                // console.log('Checking node against those in rightEdgeGroup ' + rightKey);
-
-                // If it's just got one node, than skip it
-                if(rightEdgeGroup.length <= 1)  continue;
-
-                // If it's in a group, then exit this function because we don't want to add it
-                for( k=0; k<rightEdgeGroup.length; k++) {
-                    // console.log("iterating through right edge group");
-
-                    if(rightEdgeGroup[k] === node) {
-                        console.log("Found in a right edge group, so not added to sibling groups");
-                        return;
-                    }
-                }
-            }
-
-            // Since it wasn't found in a right edge group, then add it as a group of 1
-            siblingGroups.push(leftEdgeGroups[leftKey]);
-        }
-    });
+    // console.log('leftEdgeGroups', leftEdgeGroups);
+    // console.log('rightEdgeGroups', rightEdgeGroups);
 
 
 
-    // copy all right edge siblingGroups that have more than 1 in the array, delete all other groups.
-    Object.keys(rightEdgeGroups).forEach( function (rightKey) {
+    // // Remove nodes that are already represented in a group
+    // /////////////////
 
-        if(rightEdgeGroups[rightKey].length > 1) {
-            // If it's a group of nodes, then add it to the new array
-            siblingGroups.push(rightEdgeGroups[rightKey]);
+    // let siblingGroups = [];
 
-        }
+    // // check through all left edge siblingGroups, if it has only 1 in the array, check the right edge groups for the same Object, if it exists in a group by itself there tool, then keep it, otherwise, delete it.
+    // Object.keys(leftEdgeGroups).forEach( function (leftKey) {
 
-    });
+    //     if(leftEdgeGroups[leftKey].length > 1) {
+    //         // If it's a group of nodes, then add it to the new array
+    //         siblingGroups.push(leftEdgeGroups[leftKey]);
+
+    //     } else {
+    //         // If it's a single node, check if it's got a group in the right edge list, if it does, don't add it.
+    //         let node = leftEdgeGroups[leftKey][0];
+
+    //         for (const [rightKey, rightEdgeGroup] of Object.entries(rightEdgeGroups)) {
+    //             // console.log('Checking node against those in rightEdgeGroup ' + rightKey);
+
+    //             // If it's just got one node, than skip it
+    //             if(rightEdgeGroup.length <= 1)  continue;
+
+    //             // If it's in a group, then exit this function because we don't want to add it
+    //             for( k=0; k<rightEdgeGroup.length; k++) {
+    //                 // console.log("iterating through right edge group");
+
+    //                 if(rightEdgeGroup[k] === node) {
+    //                     console.log("Found in a right edge group, so not added to sibling groups");
+    //                     return;
+    //                 }
+    //             }
+    //         }
+
+    //         // Since it wasn't found in a right edge group, then add it as a group of 1
+    //         siblingGroups.push(leftEdgeGroups[leftKey]);
+    //     }
+    // });
 
 
-    console.log('siblingGroups before subset removal', siblingGroups);
-    siblingGroups = removeSubsets(siblingGroups);
+
+    // // copy all right edge siblingGroups that have more than 1 in the array, delete all other groups.
+    // Object.keys(rightEdgeGroups).forEach( function (rightKey) {
+
+    //     if(rightEdgeGroups[rightKey].length > 1) {
+    //         // If it's a group of nodes, then add it to the new array
+    //         siblingGroups.push(rightEdgeGroups[rightKey]);
+
+    //     }
+
+    // });
+
+
+    // console.log('siblingGroups before subset removal', siblingGroups);
+    // siblingGroups = removeSubsets(siblingGroups);
 
 
 
@@ -140,11 +143,25 @@ async function getMindMap() {
     // If a single node's border colour doesn't equal "transparent", then it's the root node
 
 
-    console.log('siblingGroups', siblingGroups);
+    // console.log('siblingGroups', siblingGroups);
 
 }
 
 
+
+
+
+function getRootNode(nodes) {
+
+    for(k=0; k<nodes.length; k++) {
+        console.log(nodes[k]);
+        if(nodes[k].style.borderColor != "transparent") {
+            console.log(nodes[k].plainText);
+            return nodes[k];
+        }
+    }
+
+}
 
 
 
@@ -173,7 +190,6 @@ function removeSubsets(origGroups) {
                 
                 // continue to the next group
                 continue groupLoop;
-
             }
         }
 
