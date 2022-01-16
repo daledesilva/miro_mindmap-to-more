@@ -26,7 +26,7 @@ miro.onReady(() => {
 
 
 async function startMindMapConversion() {
-    console.log("Starting mind map conversion 7");
+    console.log("Starting mind map conversion 8");
 
     let mindMap = getMindMap();
 
@@ -107,7 +107,15 @@ async function getMindMap() {
 
 
     // copy all right edge siblingGroups that have more than 1 in the array, delete all other groups.
+    Object.keys(rightEdgeGroups).forEach( function (rightKey) {
 
+        if(rightEdgeGroups[rightKey].length > 1) {
+            // If it's a group of nodes, then add it to the new array
+            siblingGroups.push(rightEdgeGroups[rightKey]);
+
+        }
+
+    }
 
 
 
