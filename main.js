@@ -29,8 +29,14 @@ async function startMindMapConversion() {
     console.log("Starting mind map conversion 24");
 
     const mindMap = getMindMap();
+    miro.showNotification('Mind map found')
 
-    miro.showNotification('Mind map has been converted')
+    const newOrigin = {
+        x: mindMap.node.bounds.x,
+        y: mindMap.node.y+200,
+    }
+    createVerticalMindMap(mindMap, newOrigin);
+    miro.showNotification('Mind map converted')
 }
 
 
@@ -60,6 +66,7 @@ async function getMindMap() {
     console.log( 'groupsToLeft', groupsToLeft);
     console.log( 'groupsToRight', groupsToRight);
     console.log( 'mindMap', mindMap);
+
 
 }
 
@@ -171,24 +178,12 @@ function getChildNodeTreesFrom(nodesLeft, parentNode) {
     for( k=0; k<nodesLeft.length; k++ ) {
         const bottomEdge = getBottomEdge(nodesLeft[k]);
         const topEdge = getTopEdge(nodesLeft[k]);
-
-        console.log('parentNode.bounds.top', parentNode.bounds.top);
-        console.log('parentNode.bounds.y', parentNode.bounds.y);
-        console.log('parentNode.bounds.bottom', parentNode.bounds.bottom);
-
-
-        console.log('parentNode.bounds.left', parentNode.bounds.left);
-        console.log('parentNode.bounds.x', parentNode.bounds.y);
-        console.log('parentNode.bounds.right', parentNode.bounds.right);
         
         if(parentNode.bounds.y > topEdge && parentNode.bounds.y < bottomEdge) {
             // The group is the closest horizontal group roughly centred around this parent node, so it must be the children
-            console.log('nodesLeft before splice', nodesLeft);
+
             const childNodes = nodesLeft.splice(k, 1)[0];
             const childNodeTrees = [];
-
-            console.log('nodesLeft', nodesLeft);
-            console.log('childNodes', childNodes);
 
             for( let j=0; j<childNodes.length; j++ ) {
                 childNodeTrees.push({
@@ -226,6 +221,41 @@ function getTopEdge(nodes) {
 }
 
 
+
+
+
+
+
+
+
+
+function createVerticalMindMap(mindMap, origin) {
+
+    // mindMap.node
+
+    miro.board.widgets.create({
+        type: 'shape',
+        text: mindMap.node.text,
+        x: origin.x,
+        y: origin.y,
+        // width: sticker.bounds.width,
+        // height: sticker.bounds.height,
+    })
+
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+// TODO: If nodes are left that that have the same horz position but don't match the parent's vert position, they get left off.
 
 
 
