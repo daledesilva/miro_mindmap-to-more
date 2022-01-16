@@ -9,7 +9,7 @@ miro.onReady(() => {
     extensionPoints: {
       
       bottomBar: {
-        title: 'convert mind map',
+        title: 'convert mind map 2',
         svgIcon:
           '<circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2"/>',
         positionPriority: 1,
@@ -26,10 +26,10 @@ miro.onReady(() => {
 
 
 async function startMindMapConversion() {
-    console.log("Starting mind map conversion 27");
 
-    const mindMap = await getMindMap();
-    await createVerticalMindMap(mindMap);
+    // const mindMap = await getMindMap();
+    // await createVerticalMindMap(mindMap);
+    createVerticalMindMap( await getMindMap() );
 }
 
 
