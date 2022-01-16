@@ -26,7 +26,7 @@ miro.onReady(() => {
 
 
 async function startMindMapConversion() {
-    console.log("Starting mind map conversion 15");
+    console.log("Starting mind map conversion 16");
 
     const mindMap = getMindMap();
 
@@ -46,8 +46,8 @@ async function getMindMap() {
     const groupsToRight = groupByLeftEdge(nodesOnRight);
     const groupsToLeft = groupByRightEdge(nodesOnLeft);
 
-    sortGroupsByDistFromRootNode(leftEdgeGroups, rootNode);
-    sortGroupsByDistFromRootNode(rightEdgeGroups, rootNode);
+    sortGroupsByDistFromRootNode(groupsToRight, rootNode);
+    sortGroupsByDistFromRootNode(groupsToLeft, rootNode);
 
     
     const mindMap = {
