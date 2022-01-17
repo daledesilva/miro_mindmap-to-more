@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 
 const VERT_BUFFER = 60;
 const HORZ_BUFFER = 30;
@@ -13,7 +11,7 @@ miro.onReady(() => {
     extensionPoints: {
       
       bottomBar: {
-        title: 'convert mind map 8',
+        title: 'convert mind map 9',
         svgIcon:
           '<circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2"/>',
         positionPriority: 1,
@@ -33,11 +31,15 @@ async function startMindMapConversion() {
 
     const mindMap = await getMindMap();
     await createVerticalMindMap(mindMap)
-    await refineDownwardBranchLayout(mindMap);
-    miro.showNotification('Mind map converted');
+
+    setInterval( () => {
+        await refineDownwardBranchLayout(mindMap);
+        miro.showNotification('Mind map converted');
+
+        console.log('mindMap', mindMap)
+    },1000)
 
     
-    console.log('mindMap', mindMap)
 }
 
 
@@ -313,7 +315,7 @@ async function refineDownwardBranchLayout(node) {
             refineDownwardBranchLayout( childNodes[k] );
         }
     } else {
-        console.log("node", _.cloneDeep(node) );
+        console.log("node", node );
         console.log("node.origRef", node.origRef);
         console.log("node.newRef", node.newRef);
         console.log("ROTATING "+ node.newRef.plainText);
