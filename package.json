@@ -3,5 +3,7 @@
     "private": true,
     "version": "0.0.1",
     "license": "MIT",
-    "dependencies": {}
+    "dependencies": {
+        "lodash": "^4.17.21"
+    }
 }

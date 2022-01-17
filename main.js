@@ -1,4 +1,4 @@
-// import _ from 'lodash';
+import _ from 'lodash';
 
 
 const VERT_BUFFER = 60;
@@ -32,11 +32,9 @@ miro.onReady(() => {
 async function startMindMapConversion() {
 
     const mindMap = await getMindMap();
-    createVerticalMindMap(mindMap).then( async () => {
-        console.log('BETWEEN');
-        await refineDownwardBranchLayout(mindMap);
-        miro.showNotification('Mind map converted');
-    });
+    await createVerticalMindMap(mindMap)
+    await refineDownwardBranchLayout(mindMap);
+    miro.showNotification('Mind map converted');
 
     
     console.log('mindMap', mindMap)
@@ -315,7 +313,7 @@ async function refineDownwardBranchLayout(node) {
             refineDownwardBranchLayout( childNodes[k] );
         }
     } else {
-        console.log("node", node);
+        console.log("node", _.cloneDeep(node) );
         console.log("node.origRef", node.origRef);
         console.log("node.newRef", node.newRef);
         console.log("ROTATING "+ node.newRef.plainText);
