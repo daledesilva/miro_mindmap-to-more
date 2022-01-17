@@ -11,7 +11,7 @@ miro.onReady(() => {
     extensionPoints: {
       
       bottomBar: {
-        title: 'convert mind map 3',
+        title: 'convert mind map 4',
         svgIcon:
           '<circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2"/>',
         positionPriority: 1,
@@ -36,7 +36,7 @@ async function startMindMapConversion() {
         await refineDownwardBranchLayout(mindMap);
         miro.showNotification('Mind map converted');
 
-        console.log('mindMap', mindMap)
+        console.log('mindMap', mindMap);
     }, 1000)
 
     
@@ -315,13 +315,11 @@ async function refineDownwardBranchLayout(node) {
             refineDownwardBranchLayout( childNodes[k] );
         }
     } else {
-        console.log("ROTATING "+ node.newRef.plainText);
-
         await miro.board.widgets.update({
             ...node.newRef,
-            rotation: 45,
-            width: 200,
-            // height: sticker.bounds.height,
+            rotation: 90,
+            width: 400,
+            height: 50
         })
     }
 
