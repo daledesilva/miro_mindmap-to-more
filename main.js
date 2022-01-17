@@ -32,7 +32,7 @@ async function startMindMapConversion() {
     const mindMap = await getMindMap();
     await createVerticalMindMap(mindMap)
 
-    setInterval( () => {
+    setInterval( async () => {
         await refineDownwardBranchLayout(mindMap);
         miro.showNotification('Mind map converted');
 
