@@ -1,6 +1,6 @@
 
 const VERT_BUFFER = 60;
-const HORZ_BUFFER = 30;
+const HORZ_BUFFER = 20;
 
 
 
@@ -11,7 +11,7 @@ miro.onReady(() => {
     extensionPoints: {
       
       bottomBar: {
-        title: 'convert mind map 8',
+        title: 'convert mind map 9',
         svgIcon:
           '<circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2"/>',
         positionPriority: 1,
@@ -315,7 +315,6 @@ async function refineDownwardBranchLayout(node) {
             treeWidth += await refineDownwardBranchLayout( childNodes[k] );
         }
         treeWidth += HORZ_BUFFER*childNodes.length-2;
-        console.log('treeWidth', treeWidth);
         treeWidth = Math.max(node.newRef.bounds.width, treeWidth);
         await miro.board.widgets.update({
             ...node.newRef,
@@ -326,7 +325,8 @@ async function refineDownwardBranchLayout(node) {
             ...node.newRef,
             rotation: 90,
             width: 400,
-            height: 50
+            height: 50,
+            top: 0,
         })
         treeWidth = 50;
     }
