@@ -11,7 +11,7 @@ miro.onReady(() => {
     extensionPoints: {
       
       bottomBar: {
-        title: 'convert mind map 1',
+        title: 'convert mind map 2',
         svgIcon:
           '<circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2"/>',
         positionPriority: 1,
@@ -319,8 +319,8 @@ async function refineDownwardBranchLayout(node) {
 
         miro.board.widgets.update({
             id: node.newRef.id,
-            rotation: 90,
-            // width: sticker.bounds.width,
+            rotation: 45,
+            width: 200,
             // height: sticker.bounds.height,
         })
     }
