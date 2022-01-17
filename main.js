@@ -11,7 +11,7 @@ miro.onReady(() => {
     extensionPoints: {
       
       bottomBar: {
-        title: 'convert mind map 1',
+        title: 'convert mind map 2',
         svgIcon:
           '<circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2"/>',
         positionPriority: 1,
@@ -320,20 +320,45 @@ async function refineDownwardBranchLayout(node) {
             ...node.newRef,
             width: treeWidth,
         })
+
+        // Move all children into position (their full trees based on their treeWidth)
+        for( let k=0; k<childNodes.length; k++ ) {
+            const parentLeftEdge = node.newRef.bounds.x - node.newRef.bounds.width/2;
+            const childLeftEdge = childNodes[k].newRef.bounds.x - childNodes[k].newRef.bounds.width/2; // This width might not be right - It should be top if it's rotated, plus the ref's not been updated since adjusting
+            const offsetX = parentLeftEdge - childLeftEdge;
+            const parentBottomEdge = node.newRef.bounds.y + node.newRef.bounds.height/2;
+            const childTopEdge = childNodes[k].newRef.bounds.y - childNodes[k].newRef.bounds.height/2; // This width might not be right - It should be top if it's rotated, plus the ref's not been updated since adjusting
+            const offsetY = parentBottomEdge - childTopEdge + (VERT_BUFFER*k);
+            await moveTreeRecursively( childNodes[k], {offsetX, offsetY} );
+        }
+
     } else {
-        await miro.board.widgets.update({
-            ...node.newRef,
-            rotation: 90,
-            width: 400,
-            height: 50,
-            bounds: {
-                top: 0,
-            }
-        })
-        treeWidth = 50;
+        // await miro.board.widgets.update({
+        //     ...node.newRef,
+        //     rotation: 90,
+        //     width: 400,
+        //     height: 50,
+        // })
+        // treeWidth = 50;
+        treeWidth = node.newRef.bounds.width;
     }
+    node.treeWidth = treeWidth;
     return treeWidth;
 
+}
+
+
+
+
+async function moveTreeRecursively( node, offset ) {
+    await miro.board.widgets.update({
+        ...node.newRef,
+        x: node.newRef.x + offset.x,
+        y: node.newRef.y + offset.y,
+    })
+    for( let k=0; k<childNodes.length; k++ ) {
+        await moveTreeRecursively( childNodes[k], offset );
+    }
 }
 
 
