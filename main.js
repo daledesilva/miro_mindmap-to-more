@@ -321,23 +321,14 @@ async function refineDownwardBranchLayout(node) {
             width: treeWidth,
         })
 
-        // Move all children into position (their full trees based on their treeWidth)
-        // for( let k=0; k<childNodes.length; k++ ) {
-        //     const parentLeftEdge = node.newRef.bounds.x - node.newRef.bounds.width/2;
-        //     const childLeftEdge = childNodes[k].newRef.bounds.x - childNodes[k].newRef.bounds.width/2; // This width might not be right - It should be top if it's rotated, plus the ref's not been updated since adjusting
-        //     const offsetX = parentLeftEdge - childLeftEdge;
-        //     const parentBottomEdge = node.newRef.bounds.y + node.newRef.bounds.height/2;
-        //     const childTopEdge = childNodes[k].newRef.bounds.y - childNodes[k].newRef.bounds.height/2; // This width might not be right - It should be top if it's rotated, plus the ref's not been updated since adjusting
-        //     const offsetY = parentBottomEdge - childTopEdge + (VERT_BUFFER*k);
-        //     await moveTreeRecursively( childNodes[k], {offsetX, offsetY} );
-        // }
-
+        await alignNodesUnderParent(node, childNodes);
+        
     } else {
         await miro.board.widgets.update({
             ...node.newRef,
-            rotation: 90,
-            width: 400,
-            height: 50,
+            // rotation: 90,
+            // width: 400,
+            // height: 50,
         })
         treeWidth = 50;
         // treeWidth = node.newRef.bounds.width;
@@ -350,15 +341,51 @@ async function refineDownwardBranchLayout(node) {
 
 
 
-async function moveTreeRecursively( node, offset ) {
-    await miro.board.widgets.update({
-        ...node.newRef,
-        x: node.newRef.x + offset.x,
-        y: node.newRef.y + offset.y,
-    })
-    for( let k=0; k<childNodes.length; k++ ) {
-        await moveTreeRecursively( childNodes[k], offset );
+// async function moveTreeRecursively( node, offset ) {
+//     await miro.board.widgets.update({
+//         ...node.newRef,
+//         x: node.newRef.x + offset.x,
+//         y: node.newRef.y + offset.y,
+//     })
+//     for( let k=0; k<childNodes.length; k++ ) {
+//         await moveTreeRecursively( childNodes[k], offset );
+//     }
+// }
+
+
+async function alignNodesUnderParent(parentNode) {
+
+    if(parentNode.childNodes.length <= 0) {
+        parentNode.treeWidth = parentNode.newRef.bounds.width;
+        return parentNode.treeWidth;
     }
+
+    // Move all children into position (their full trees based on their treeWidth)
+    for( let k=0; k<parentNode.childNodes.length; k++ ) {
+        const childNode = parentNode.childNodes[k];
+        const childTreeWidth = await alignNodesUnderParent( childNode );
+
+        // Left edge of the parent node on it's own
+        const parentLeftEdge = parentNode.newRef.bounds.x - parentNode.newRef.bounds.width/2;
+
+        // Left boundary of the child node and all it's children as a group
+        const childTreeLeftEdge = childNode.newRef.bounds.x - childNode.treeWidth/2; // TODO: This width might not be right - It should be top if it's rotated, plus the ref's not been updated since adjusting
+        const offsetX = parentLeftEdge - childTreeLeftEdge; // TODO: This will move all children to start of parent node - it needs to iteratively add on to each on
+        const parentBottomEdge = parentNode.newRef.bounds.y + parentNode.newRef.bounds.height/2;
+        const childTopEdge = childNode.newRef.bounds.y - childNode.newRef.bounds.height/2; // This width might not be right - It should be top if it's rotated, plus the ref's not been updated since adjusting
+        const offsetY = parentBottomEdge - childTopEdge + VERT_BUFFER;
+
+
+        childNode.newRef.x += offsetX;
+        childNode.newRef.y += offsetY;
+
+        await miro.board.widgets.update({
+            ...childNode.newRef,
+        })        
+
+        
+    }
+
 }
 
 
