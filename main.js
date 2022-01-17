@@ -253,7 +253,7 @@ async function createVerticalMindMap(rootNode) {
     await createChildrenBelow(rootNode);
     await createChildrenAbove(rootNode);
 
-    
+    console.log('Created vertical mind map');
     
 }
 
