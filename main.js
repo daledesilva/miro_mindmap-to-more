@@ -313,7 +313,9 @@ async function refineDownwardBranchLayout(node) {
             refineDownwardBranchLayout( childNodes[k] );
         }
     } else {
-        console.log("ROTATING "+node.newRef.plainText);
+        console.log("node", node);
+        console.log("node.newRef", node.newRef);
+        console.log("ROTATING "+ node.newRef.plainText);
         node.newRef.rotation = 90;
     }
 
