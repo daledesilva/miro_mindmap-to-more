@@ -11,7 +11,7 @@ miro.onReady(() => {
     extensionPoints: {
       
       bottomBar: {
-        title: 'convert mind map 7',
+        title: 'convert mind map 8',
         svgIcon:
           '<circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2"/>',
         positionPriority: 1,
@@ -32,7 +32,10 @@ async function startMindMapConversion() {
     const mindMap = await getMindMap();
     await createVerticalMindMap(mindMap)
     
+    console.log('startConversion -- mindMap.newRef', mindMap.newRef);
     console.log('startConversion -- mindMap.newRef.plainText', mindMap.newRef.plainText);
+    console.log('startConversion -- mindMap.childNodesAfter[0].newRef', mindMap.childNodesAfter[0].newRef);
+    console.log('startConversion -- mindMap.childNodesAfter[0].newRef.plainText', mindMap.childNodesAfter[0].newRef.plainText);
 
     await sizeNodeAndLayOutItsChildren(mindMap);
     miro.showNotification('Mind map converted');
@@ -310,38 +313,38 @@ async function createChildrenAbove(parentNode) {
 
 
 
-async function refineDownwardBranchLayout(node) {
-    treeWidth = 0;
+// async function refineDownwardBranchLayout(node) {
+//     treeWidth = 0;
 
-    const childNodes = node.childNodesAfter || node.childNodes;
+//     const childNodes = node.childNodesAfter || node.childNodes;
 
-    if(childNodes.length) {
-        for( let k=0; k<childNodes.length; k++ ) {
-            treeWidth += await refineDownwardBranchLayout( childNodes[k] );
-        }
-        treeWidth += HORZ_BUFFER*childNodes.length-2;
-        treeWidth = Math.max(node.newRef.bounds.width, treeWidth);
-        await miro.board.widgets.update({
-            ...node.newRef,
-            width: treeWidth,
-        })
+//     if(childNodes.length) {
+//         for( let k=0; k<childNodes.length; k++ ) {
+//             treeWidth += await refineDownwardBranchLayout( childNodes[k] );
+//         }
+//         treeWidth += HORZ_BUFFER*childNodes.length-2;
+//         treeWidth = Math.max(node.newRef.bounds.width, treeWidth);
+//         await miro.board.widgets.update({
+//             ...node.newRef,
+//             width: treeWidth,
+//         })
 
-        await sizeNodeAndLayOutItsChildren(node, childNodes);
+//         await sizeNodeAndLayOutItsChildren(node, childNodes);
         
-    } else {
-        // await miro.board.widgets.update({
-        //     ...node.newRef,
-        //     // rotation: 90,
-        //     // width: 400,
-        //     // height: 50,
-        // })
-        // treeWidth = 50;
-        // treeWidth = node.newRef.bounds.width;
-    }
-    node.treeWidth = treeWidth;
-    return treeWidth;
+//     } else {
+//         // await miro.board.widgets.update({
+//         //     ...node.newRef,
+//         //     // rotation: 90,
+//         //     // width: 400,
+//         //     // height: 50,
+//         // })
+//         // treeWidth = 50;
+//         // treeWidth = node.newRef.bounds.width;
+//     }
+//     node.treeWidth = treeWidth;
+//     return treeWidth;
 
-}
+// }
 
 
 
