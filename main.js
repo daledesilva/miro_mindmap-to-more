@@ -11,7 +11,7 @@ miro.onReady(() => {
     extensionPoints: {
       
       bottomBar: {
-        title: 'convert mind map 4',
+        title: 'convert mind map 5',
         svgIcon:
           '<circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2"/>',
         positionPriority: 1,
@@ -435,12 +435,17 @@ async function moveNodeTreeBy(node, offset) {
     const nodeArr = getNodeTreeAsArray(node);
     console.log('nodeArr', nodeArr);
 
-    node.newRef.x += offset.x;
-    node.newRef.y += offset.y;
+    const widgetUpdateArr = [];
+    for(curNode of nodeArr) {
+        curNode.newRef.x += offset.x;
+        curNode.newRef.y += offset.y;
 
-    await miro.board.widgets.update({
-        ...node.newRef,
-    })
+        widgetUpdateArr.push({
+            ...curNode.newRef
+        })
+    }
+    
+    await miro.board.widgets.update(widgetUpdateArr);
 }
 
 
