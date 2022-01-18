@@ -11,7 +11,7 @@ miro.onReady(() => {
     extensionPoints: {
       
       bottomBar: {
-        title: 'convert mind map 1',
+        title: 'convert mind map 2',
         svgIcon:
           '<circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2"/>',
         positionPriority: 1,
@@ -158,10 +158,13 @@ function groupByRightEdge(nodes) {
     const groupDict = [];
 
     nodes.map((node) => {
-        if(groupDict[node.bounds.right] === undefined) {
-            groupDict[node.bounds.right] = [];
+        // Approximate to the nearest 10 pixels
+        const rightX = Math.round(node.bounds.right*10)/10;
+
+        if(groupDict[rightX] === undefined) {
+            groupDict[rightX] = [];
         }
-        groupDict[node.bounds.right].push(node);
+        groupDict[rightX].push(node);
     })
 
     const groupArr = [];
