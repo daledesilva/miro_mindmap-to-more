@@ -11,7 +11,7 @@ miro.onReady(() => {
     extensionPoints: {
       
       bottomBar: {
-        title: 'convert mind map 2',
+        title: 'convert mind map 3',
         svgIcon:
           '<circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2"/>',
         positionPriority: 1,
@@ -255,8 +255,8 @@ function getTopEdge(nodes) {
 async function createNewMindMap(rootNode) {
 
     const origin = {
-        x: rootNode.origRef.bounds.x,
-        y: rootNode.origRef.bounds.y+1000,
+        x: rootNode.origRef.bounds.x+2000,
+        y: rootNode.origRef.bounds.y,
     }
 
     const newRefs = await miro.board.widgets.create({
