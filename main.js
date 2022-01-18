@@ -11,7 +11,7 @@ miro.onReady(() => {
     extensionPoints: {
       
       bottomBar: {
-        title: 'convert mind map 7',
+        title: 'convert mind map 8',
         svgIcon:
           '<circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2"/>',
         positionPriority: 1,
@@ -497,7 +497,7 @@ async function layOutNodesToLeft(parentNode, depth) {
 
     // If there are no children, then it's a leaf node, so just size/rotate it and return it's width as it's treeWidth
     if(childNodes.length <= 0) {
-        await createLeafNodeRotated(parentNode);
+        await createLeafNode(parentNode);
         return parentNode.treeWidth;
     }
 
@@ -564,7 +564,7 @@ async function layOutNodesToRight(parentNode, depth) {
     let thisTreeHeight = 0;
     for( let k=0; k<childNodes.length; k++ ) {
         const childNode = childNodes[k];
-        const childTreeHeight = await layOutNodesToLeft( childNode, depth+1 );
+        const childTreeHeight = await layOutNodesToRight( childNode, depth+1 );
         thisTreeHeight += childTreeHeight;
     }
     thisTreeHeight += branchBuffer * (childNodes.length-1);
