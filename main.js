@@ -541,9 +541,7 @@ async function layOutNodesToLeft(parentNode, depth) {
 
     // Size the parent node so it will fit all the child trees
     parentNode.newRef.bounds.height = parentNode.newRef.height = thisTreeHeight;
-
-    styleBranchNode(parentNode.newRh);
-
+    styleBranchNode(parentNode.newRef);
     await miro.board.widgets.update({
         ...parentNode.newRef
     })
