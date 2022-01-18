@@ -11,7 +11,7 @@ miro.onReady(() => {
     extensionPoints: {
       
       bottomBar: {
-        title: 'convert mind map 8',
+        title: 'convert mind map 9',
         svgIcon:
           '<circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2"/>',
         positionPriority: 1,
@@ -417,7 +417,7 @@ async function sizeNodeAndLayOutItsChildren(parentNode) {
         const childTopEdge = childNode.newRef.bounds.y - childNode.newRef.bounds.height/2; // This width might not be right - It should be top if it's rotated, plus the ref's not been updated since adjusting
         offset.y = (parentBottomEdge+VERT_BUFFER) - childTopEdge;
 
-        moveNodeTreeBy(childNode, offset);
+        await moveNodeTreeBy(childNode, offset);
 
         // Increment offset for next child node to be positioned
         curOffsetXFromParent += childNode.treeWidth + HORZ_BUFFER;
@@ -430,7 +430,7 @@ async function sizeNodeAndLayOutItsChildren(parentNode) {
 }
 
 
-function moveNodeTreeBy(node, offset) {
+async function moveNodeTreeBy(node, offset) {
 
     const nodeArr = getNodeTreeAsArray(node);
     console.log('nodeArr', nodeArr);
