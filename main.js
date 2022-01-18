@@ -1,6 +1,6 @@
 
-const PARENT_MARGIN = 0;//100;
-const SIBLING_MARGIN = 50;
+const PARENT_MARGIN = 0;
+const SIBLING_MARGIN = 150;
 
 
 
@@ -11,7 +11,7 @@ miro.onReady(() => {
     extensionPoints: {
       
       bottomBar: {
-        title: 'convert mind map 3',
+        title: 'convert mind map 4',
         svgIcon:
           '<circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2"/>',
         positionPriority: 1,
@@ -255,7 +255,7 @@ function getTopEdge(nodes) {
 async function createNewMindMap(rootNode) {
 
     const origin = {
-        x: rootNode.origRef.bounds.x+2000,
+        x: rootNode.origRef.bounds.x+6000,
         y: rootNode.origRef.bounds.y,
     }
 
@@ -364,7 +364,12 @@ async function createLeafNode(node) {
     node.newRef.width = node.newRef.bounds.width;
     node.newRef.height = node.newRef.bounds.height;
     await miro.board.widgets.update({
-        ...node.newRef
+        ...node.newRef,
+        style: {
+            borderOpacity: 0,
+            backgroundColor: "#FFFFFF",
+            textColor: "#000000"
+        }
     })
     node.treeWidth = node.newRef.bounds.width;
     node.treeHeight = node.newRef.bounds.height;
@@ -495,7 +500,7 @@ async function layOutNodesToLeft(parentNode, depth) {
     const parentMargin = PARENT_MARGIN/(depth || 1);
     const siblingMargin = SIBLING_MARGIN/(depth || 1);
 
-    // If there are no children, then it's a leaf node, so just size/rotate it and return it's width as it's treeWidth
+    // If there are no children, then it's a leaf node, so just size/rotate it and return it's width as it's treeHeight
     if(childNodes.length <= 0) {
         await createLeafNode(parentNode);
         return parentNode.treeHeight;
@@ -554,13 +559,13 @@ async function layOutNodesToRight(parentNode, depth) {
     const parentMargin = PARENT_MARGIN/(depth || 1);
     const siblingMargin = SIBLING_MARGIN/(depth || 1);
 
-    // If there are no children, then it's a leaf node, so just size/rotate it and return it's width as it's treeWidth
+    // If there are no children, then it's a leaf node, so just size/rotate it and return it's width as it's treeHeight
     if(childNodes.length <= 0) {
         await createLeafNode(parentNode);
         return parentNode.treeHeight;
     }
 
-    // It's got children, so calculate them first to get the overall width
+    // It's got children, so calculate them first to get the overall height
     let thisTreeHeight = 0;
     for( let k=0; k<childNodes.length; k++ ) {
         const childNode = childNodes[k];
