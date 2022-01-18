@@ -11,7 +11,7 @@ miro.onReady(() => {
     extensionPoints: {
       
       bottomBar: {
-        title: 'convert mind map 7',
+        title: 'convert mind map 8',
         svgIcon:
           '<circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2"/>',
         positionPriority: 1,
@@ -408,22 +408,17 @@ async function sizeNodeAndLayOutItsChildren(parentNode) {
     let curOffsetXFromParent = 0;
     for( let k=0; k<childNodes.length; k++ ) {
         const childNode = childNodes[k];
+        const offset = {};
 
         // Left boundary of the child node and all it's children as a group
         const childTreeLeftEdge = childNode.newRef.bounds.x - childNode.treeWidth/2;
-        const offsetX = (parentLeftEdge+curOffsetXFromParent) - childTreeLeftEdge;
+        offset.x = (parentLeftEdge+curOffsetXFromParent) - childTreeLeftEdge;
         
         const childTopEdge = childNode.newRef.bounds.y - childNode.newRef.bounds.height/2; // This width might not be right - It should be top if it's rotated, plus the ref's not been updated since adjusting
-        const offsetY = (parentBottomEdge+VERT_BUFFER) - childTopEdge;
+        offset.y = (parentBottomEdge+VERT_BUFFER) - childTopEdge;
 
-        childNode.newRef.x += offsetX;
-        childNode.newRef.y += offsetY;
+        moveNodeTreeBy(childNode, offset);
 
-        await miro.board.widgets.update({
-            ...childNode.newRef,
-        })        
-
-        console.log('childNode.treeWidth', childNode.treeWidth);
         // Increment offset for next child node to be positioned
         curOffsetXFromParent += childNode.treeWidth + HORZ_BUFFER;
     }
@@ -432,6 +427,32 @@ async function sizeNodeAndLayOutItsChildren(parentNode) {
     parentNode.treeWidth = thisTreeWidth;
     return parentNode.treeWidth;
 
+}
+
+
+function moveNodeTreeBy(node, offset) {
+
+    const nodeArr = getNodeTreeAsArray(node);
+    console.log('nodeArr', nodeArr);
+
+    node.newRef.x += offset.x;
+    node.newRef.y += offset.y;
+
+    await miro.board.widgets.update({
+        ...node.newRef,
+    })
+}
+
+
+function getNodeTreeAsArray(node) {
+    const nodeArr = [node];
+
+    const childNodes = node.childNodes || node.childNodesAfter.concat(node.childNodesBefore);
+    for(node in childNodes) {
+        nodeArr = nodeArr.concat( getNodeTreeAsArray(childNode) );
+    }
+
+    return nodeArr;
 }
 
 
