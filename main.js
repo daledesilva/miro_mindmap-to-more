@@ -11,7 +11,7 @@ miro.onReady(() => {
     extensionPoints: {
       
       bottomBar: {
-        title: 'convert mind map 1',
+        title: 'convert mind map 2',
         svgIcon:
           '<circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2"/>',
         positionPriority: 1,
@@ -43,7 +43,7 @@ async function startMindMapConversion() {
 
     setTimeout( async () => {
         
-        await sizeNodeAndLayOutItsChildren(mindMap, 0);
+        await sizeNodeAndLayOutItsChildren(mindMap, 1);
 
         miro.showNotification('Mind map converted');
         console.log('mindMap', mindMap);
