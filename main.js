@@ -1,6 +1,6 @@
 
-const VERT_BUFFER = 20;
-const HORZ_BUFFER = 60;
+const VERT_BUFFER = 150;
+const HORZ_BUFFER = 100;
 
 
 
@@ -11,7 +11,7 @@ miro.onReady(() => {
     extensionPoints: {
       
       bottomBar: {
-        title: 'convert mind map 2',
+        title: 'convert mind map 3',
         svgIcon:
           '<circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2"/>',
         positionPriority: 1,
