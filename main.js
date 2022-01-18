@@ -11,7 +11,7 @@ miro.onReady(() => {
     extensionPoints: {
       
       bottomBar: {
-        title: 'convert mind map 8',
+        title: 'convert mind map 9',
         svgIcon:
           '<circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2"/>',
         positionPriority: 1,
@@ -491,7 +491,7 @@ async function layOutNodesBelow(parentNode, depth) {
 
 
 async function layOutNodesToLeft(parentNode, depth) {
-    const childNodes = parentNode.childNodesAfter || parentNode.childNodes;
+    const childNodes = parentNode.childNodesBefore || parentNode.childNodes;
     const levelBuffer = LEVEL_BUFFER/(depth || 1);
     const branchBuffer = BRANCH_BUFFER/(depth || 1);
 
@@ -549,7 +549,7 @@ async function layOutNodesToLeft(parentNode, depth) {
 
 
 async function layOutNodesToRight(parentNode, depth) {
-    const childNodes = parentNode.childNodesBefore || parentNode.childNodes;
+    const childNodes = parentNode.childNodesAfter || parentNode.childNodes;
     // depth reduces horizontal spacing with each step down the tree
     const levelBuffer = LEVEL_BUFFER/(depth || 1);
     const branchBuffer = BRANCH_BUFFER/(depth || 1);
