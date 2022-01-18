@@ -9,6 +9,7 @@ function styleBranchNode(ref, depth) {
     
     // commmon styling
     ref.style.borderOpacity = 0;
+    ref.style.borderWidth = 0;
 
     const isEvenParent = depth/2 === Math.round(depth/2);
     if( isEvenParent ) {
@@ -24,6 +25,7 @@ function styleBranchNode(ref, depth) {
 
 function styleLeafNode(ref) {
     ref.style.borderOpacity = 0;
+    ref.style.borderWidth = 0;
     ref.style.backgroundColor = "#FFFFFF";
     ref.style.textColor = "#000000";
 }
