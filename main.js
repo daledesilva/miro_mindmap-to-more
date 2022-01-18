@@ -11,7 +11,7 @@ miro.onReady(() => {
     extensionPoints: {
       
       bottomBar: {
-        title: 'convert mind map 5',
+        title: 'convert mind map 6',
         svgIcon:
           '<circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2"/>',
         positionPriority: 1,
@@ -372,7 +372,7 @@ async function sizeNodeAndLayOutItsChildren(parentNode) {
     let thisTreeWidth = 0;
     console.log('parentNode', parentNode);
     for( let k=0; k<childNodes.length; k++ ) {
-        const childNode = parentNode.childNodes[k];
+        const childNode = childNodes[k];
         const childTreeWidth = await sizeNodeAndLayOutItsChildren( childNode );
         thisTreeWidth += (k*HORZ_BUFFER) + childTreeWidth;
     }
@@ -390,7 +390,7 @@ async function sizeNodeAndLayOutItsChildren(parentNode) {
     // Move all children trees into position
     let curOffsetXFromParent = 0;
     for( let k=0; k<childNodes.length; k++ ) {
-        const childNode = parentNode.childNodes[k];
+        const childNode = childNodes[k];
 
         // Left boundary of the child node and all it's children as a group
         const childTreeLeftEdge = childNode.newRef.bounds.x - childNode.treeWidth/2;
