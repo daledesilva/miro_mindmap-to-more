@@ -4,6 +4,31 @@ const SIBLING_MARGIN = 150;
 
 
 
+function styleBranchNode(ref, depth) {
+    
+    // commmon styling
+    ref.style.borderOpacity = 0;
+
+    const isEvenParent = depth/2 === Math.round(depth/2);
+    if( isEvenParent ) {
+        ref.style.backgroundColor = "#12CDD4";
+        ref.style.textColor = "#FFFFFF";
+        ref.style.fontSize = 48;
+    } else {
+        ref.style.backgroundColor = "#2D9BF0";
+        ref.style.textColor = "#FFFFFF";
+        ref.style.fontSize = 80;
+    }
+}
+
+function styleLeafNode(ref) {
+    ref.style.borderOpacity = 0;
+    ref.style.backgroundColor = "#FFFFFF";
+    ref.style.textColor = "#000000";
+}
+
+
+
 
 miro.onReady(() => {
   
@@ -11,7 +36,7 @@ miro.onReady(() => {
     extensionPoints: {
       
       bottomBar: {
-        title: 'convert mind map 4',
+        title: 'convert mind map 5',
         svgIcon:
           '<circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2"/>',
         positionPriority: 1,
@@ -363,13 +388,12 @@ async function createLeafNode(node) {
     node.newRef.rotation = node.newRef.bounds.rotation;
     node.newRef.width = node.newRef.bounds.width;
     node.newRef.height = node.newRef.bounds.height;
+
+    // Set style properties
+    styleLeafNode(newRef);
+
     await miro.board.widgets.update({
         ...node.newRef,
-        style: {
-            borderOpacity: 0,
-            backgroundColor: "#FFFFFF",
-            textColor: "#000000"
-        }
     })
     node.treeWidth = node.newRef.bounds.width;
     node.treeHeight = node.newRef.bounds.height;
@@ -517,6 +541,9 @@ async function layOutNodesToLeft(parentNode, depth) {
 
     // Size the parent node so it will fit all the child trees
     parentNode.newRef.bounds.height = parentNode.newRef.height = thisTreeHeight;
+
+    styleBranchNode(parentNode.newRh);
+
     await miro.board.widgets.update({
         ...parentNode.newRef
     })
