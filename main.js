@@ -32,12 +32,23 @@ async function startMindMapConversion() {
     const mindMap = await getMindMap();
     await createVerticalMindMap(mindMap)
 
-    setTimeout( async () => {
-        await sizeNodeAndLayOutItsChildren(mindMap);
-        miro.showNotification('Mind map converted');
+    console.log('mindMap.newRef.plainText', mindMap.newRef);
+    console.log('mindMap.newRef', mindMap.newRef);
 
-        console.log('mindMap', mindMap);
-    }, 1000)
+
+    // await sizeNodeAndLayOutItsChildren(mindMap);
+    // miro.showNotification('Mind map converted');
+
+    // console.log('mindMap', mindMap);
+
+
+
+    // setTimeout( async () => {
+    //     await sizeNodeAndLayOutItsChildren(mindMap);
+    //     miro.showNotification('Mind map converted');
+
+    //     console.log('mindMap', mindMap);
+    // }, 1000)
 
     
 }
@@ -295,8 +306,7 @@ async function createChildrenAbove(parentNode) {
             y: parentNode.newRef.bounds.top - VERT_BUFFER,
         })
         childNode.newRef = newRefs[0];
-        console.log(childNode.newRef);
-
+        
         await createChildrenAbove(childNode);
     })
 
