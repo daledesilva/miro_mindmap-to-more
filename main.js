@@ -11,7 +11,7 @@ miro.onReady(() => {
     extensionPoints: {
       
       bottomBar: {
-        title: 'convert mind map 9',
+        title: 'convert mind map 1',
         svgIcon:
           '<circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2"/>',
         positionPriority: 1,
@@ -590,17 +590,17 @@ async function layOutNodesToRight(parentNode, depth) {
         offset.y = (parentTopEdge+curOffsetYFromEdge) - childTreeTopEdge;
         
         const childLeftEdge = childNode.newRef.bounds.x - childNode.newRef.bounds.width/2;
-        offset.x = (parentRightEdge+branchBuffer) - childLeftEdge;
+        offset.x = (parentRightEdge+levelBuffer) - childLeftEdge;
 
         await moveNodeTreeBy(childNode, offset);
 
         // Increment offset for next child node to be positioned
-        curOffsetYFromEdge += childNode.treeHeight + levelBuffer;
+        curOffsetYFromEdge += childNode.treeHeight + branchBuffer;
     }
 
     // Save and return so this nodes parent can position it and it's siblings
-    parentNode.treeWidth = thisTreeHeight;
-    return parentNode.treeWidth;
+    parentNode.treeHeight = thisTreeHeight;
+    return parentNode.treeHeight;
 
 }
 
