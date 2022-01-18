@@ -1,6 +1,6 @@
 
-const VERT_BUFFER = 50;
-const HORZ_BUFFER = 100;
+const BRANCH_BUFFER = 50;
+const LEVEL_BUFFER = 100;
 
 
 
@@ -11,7 +11,7 @@ miro.onReady(() => {
     extensionPoints: {
       
       bottomBar: {
-        title: 'convert mind map 4',
+        title: 'convert mind map 5',
         svgIcon:
           '<circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2"/>',
         positionPriority: 1,
@@ -30,7 +30,7 @@ miro.onReady(() => {
 async function startMindMapConversion() {
 
     const mindMap = await getMindMap();
-    await createVerticalMindMap(mindMap);
+    await createNewMindMap(mindMap);
     
     
     
@@ -43,7 +43,8 @@ async function startMindMapConversion() {
 
     setTimeout( async () => {
         
-        await layOutMindMap(mindMap);
+        await layOutVerticalMindMap(mindMap);
+        await layOutHorizontalMindMap(mindMap);
 
         miro.showNotification('Mind map converted');
         console.log('mindMap', mindMap);
@@ -251,7 +252,7 @@ function getTopEdge(nodes) {
 
 
 
-async function createVerticalMindMap(rootNode) {
+async function createNewMindMap(rootNode) {
 
     const origin = {
         x: rootNode.origRef.bounds.x,
@@ -267,15 +268,15 @@ async function createVerticalMindMap(rootNode) {
 
     rootNode.newRef = newRefs[0];
 
-    await createChildrenBelow(rootNode);
-    await createChildrenAbove(rootNode);
+    await createChildNodesAfter(rootNode);
+    await createChildNodesBefore(rootNode);
     
 }
 
 
 
 
-async function createChildrenBelow(parentNode) {
+async function createChildNodesAfter(parentNode) {
     
     const childNodes = parentNode.childNodesAfter || parentNode.childNodes;
 
@@ -283,17 +284,17 @@ async function createChildrenBelow(parentNode) {
         const newRefs = await miro.board.widgets.create({
             type: 'shape',
             text: childNode.origRef.text,
-            x: parentNode.newRef.bounds.x + index*(parentNode.newRef.bounds.width + HORZ_BUFFER),
-            y: parentNode.newRef.bounds.bottom + VERT_BUFFER,
+            x: parentNode.newRef.bounds.x + index*(parentNode.newRef.bounds.width + LEVEL_BUFFER),
+            y: parentNode.newRef.bounds.bottom + BRANCH_BUFFER,
         })
         childNode.newRef = newRefs[0];
-        await createChildrenBelow(childNode);
+        await createChildNodesAfter(childNode);
     })
 
 }
 
 
-async function createChildrenAbove(parentNode) {
+async function createChildNodesBefore(parentNode) {
     
     const childNodes = parentNode.childNodesBefore || parentNode.childNodes;
 
@@ -302,12 +303,12 @@ async function createChildrenAbove(parentNode) {
         const newRefs = await miro.board.widgets.create({
             type: 'shape',
             text: childNode.origRef.text,
-            x: parentNode.newRef.bounds.x + index*(parentNode.newRef.bounds.width + HORZ_BUFFER),
-            y: parentNode.newRef.bounds.top - VERT_BUFFER,
+            x: parentNode.newRef.bounds.x + index*(parentNode.newRef.bounds.width + LEVEL_BUFFER),
+            y: parentNode.newRef.bounds.top - BRANCH_BUFFER,
         })
         childNode.newRef = newRefs[0];
         
-        await createChildrenAbove(childNode);
+        await createChildNodesBefore(childNode);
     })
 
 }
@@ -316,12 +317,23 @@ async function createChildrenAbove(parentNode) {
 
 
 
-async function layOutMindMap(rootNode) {
+async function layOutVerticalMindMap(rootNode) {
     if(rootNode.childNodesBefore) {
         await layOutNodesAbove(rootNode, 1);
     }
     if(rootNode.childNodesAfter) {
         await layOutNodesBelow(rootNode, 1);
+    }
+}
+
+
+
+async function layOutHorizontalMindMap(rootNode) {
+    if(rootNode.childNodesBefore) {
+        await layOutNodesToLeft(rootNode, 1);
+    }
+    if(rootNode.childNodesAfter) {
+        await layOutNodesToRight(rootNode, 1);
     }
 }
 
@@ -344,66 +356,13 @@ async function createLeafNode(node) {
 
 
 
-async function layOutNodesBelow(parentNode, depth) {
-    const childNodes = parentNode.childNodesAfter || parentNode.childNodes;
-    const horzBuffer = HORZ_BUFFER/(depth || 1);
-    const vertBuffer = VERT_BUFFER/(depth || 1);
 
-    // If there are no children, then it's a leaf node, so just size/rotate it and return it's width as it's treeWidth
-    if(childNodes.length <= 0) {
-        await createLeafNode(parentNode);
-        return parentNode.treeWidth;
-    }
-
-    // It's got children, so calculate them first to get the overall width
-    let thisTreeWidth = 0;
-    for( let k=0; k<childNodes.length; k++ ) {
-        const childNode = childNodes[k];
-        const childTreeWidth = await layOutNodesBelow( childNode, depth+1 );
-        thisTreeWidth += childTreeWidth;
-    }
-    thisTreeWidth += horzBuffer * (childNodes.length-1);
-
-    // Size the parent node so it will fit all the child trees
-    parentNode.newRef.bounds.width = parentNode.newRef.width = thisTreeWidth;
-    await miro.board.widgets.update({
-        ...parentNode.newRef
-    })
-
-    // Get relevant parent node edges for alignment
-    const parentLeftEdge = parentNode.newRef.bounds.x - parentNode.newRef.bounds.width/2;
-    const parentBottomEdge = parentNode.newRef.bounds.y + parentNode.newRef.bounds.height/2;
-
-    // Move all children trees into position
-    let curOffsetXFromParent = 0;
-    for( let k=0; k<childNodes.length; k++ ) {
-        const childNode = childNodes[k];
-        const offset = {};
-
-        // Left boundary of the child node and all it's children as a group
-        const childTreeLeftEdge = childNode.newRef.bounds.x - childNode.treeWidth/2;
-        offset.x = (parentLeftEdge+curOffsetXFromParent) - childTreeLeftEdge;
-        
-        const childTopEdge = childNode.newRef.bounds.y - childNode.newRef.bounds.height/2; // This width might not be right - It should be top if it's rotated, plus the ref's not been updated since adjusting
-        offset.y = (parentBottomEdge+vertBuffer) - childTopEdge;
-
-        await moveNodeTreeBy(childNode, offset);
-
-        // Increment offset for next child node to be positioned
-        curOffsetXFromParent += childNode.treeWidth + horzBuffer;  // reduces horizontal spacing with each step down the tree
-    }
-
-    // Save and return so this nodes parent can position it and it's siblings
-    parentNode.treeWidth = thisTreeWidth;
-    return parentNode.treeWidth;
-
-}
 
 
 async function layOutNodesAbove(parentNode, depth) {
     const childNodes = parentNode.childNodesBefore || parentNode.childNodes;
-    const horzBuffer = HORZ_BUFFER/(depth || 1);
-    const vertBuffer = VERT_BUFFER/(depth || 1);
+    const levelBuffer = LEVEL_BUFFER/(depth || 1);
+    const branchBuffer = BRANCH_BUFFER/(depth || 1);
 
     // If there are no children, then it's a leaf node, so just size/rotate it and return it's width as it's treeWidth
     if(childNodes.length <= 0) {
@@ -418,7 +377,7 @@ async function layOutNodesAbove(parentNode, depth) {
         const childTreeWidth = await layOutNodesAbove( childNode, depth+1 );
         thisTreeWidth += childTreeWidth;
     }
-    thisTreeWidth += horzBuffer * (childNodes.length-1);
+    thisTreeWidth += levelBuffer * (childNodes.length-1);
 
     // Size the parent node so it will fit all the child trees
     parentNode.newRef.bounds.width = parentNode.newRef.width = thisTreeWidth;
@@ -441,12 +400,12 @@ async function layOutNodesAbove(parentNode, depth) {
         offset.x = (parentLeftEdge+curOffsetXFromParent) - childTreeLeftEdge;
         
         const childBottomEdge = childNode.newRef.bounds.y + childNode.newRef.bounds.height/2; // This width might not be right - It should be top if it's rotated, plus the ref's not been updated since adjusting
-        offset.y = (parentTopEdge-vertBuffer) - childBottomEdge;
+        offset.y = (parentTopEdge-branchBuffer) - childBottomEdge;
 
         await moveNodeTreeBy(childNode, offset);
 
         // Increment offset for next child node to be positioned
-        curOffsetXFromParent += childNode.treeWidth + horzBuffer;  // reduces horizontal spacing with each step down the tree
+        curOffsetXFromParent += childNode.treeWidth + levelBuffer;  // reduces horizontal spacing with each step down the tree
     }
 
     // Save and return so this nodes parent can position it and it's siblings
@@ -456,6 +415,176 @@ async function layOutNodesAbove(parentNode, depth) {
 }
 
 
+
+async function layOutNodesBelow(parentNode, depth) {
+    const childNodes = parentNode.childNodesAfter || parentNode.childNodes;
+    const levelBuffer = LEVEL_BUFFER/(depth || 1);
+    const branchBuffer = BRANCH_BUFFER/(depth || 1);
+
+    // If there are no children, then it's a leaf node, so just size/rotate it and return it's width as it's treeWidth
+    if(childNodes.length <= 0) {
+        await createLeafNode(parentNode);
+        return parentNode.treeWidth;
+    }
+
+    // It's got children, so calculate them first to get the overall width
+    let thisTreeWidth = 0;
+    for( let k=0; k<childNodes.length; k++ ) {
+        const childNode = childNodes[k];
+        const childTreeWidth = await layOutNodesBelow( childNode, depth+1 );
+        thisTreeWidth += childTreeWidth;
+    }
+    thisTreeWidth += levelBuffer * (childNodes.length-1);
+
+    // Size the parent node so it will fit all the child trees
+    parentNode.newRef.bounds.width = parentNode.newRef.width = thisTreeWidth;
+    await miro.board.widgets.update({
+        ...parentNode.newRef
+    })
+
+    // Get relevant parent node edges for alignment
+    const parentLeftEdge = parentNode.newRef.bounds.x - parentNode.newRef.bounds.width/2;
+    const parentBottomEdge = parentNode.newRef.bounds.y + parentNode.newRef.bounds.height/2;
+
+    // Move all children trees into position
+    let curOffsetXFromParent = 0;
+    for( let k=0; k<childNodes.length; k++ ) {
+        const childNode = childNodes[k];
+        const offset = {};
+
+        // Left boundary of the child node and all it's children as a group
+        const childTreeLeftEdge = childNode.newRef.bounds.x - childNode.treeWidth/2;
+        offset.x = (parentLeftEdge+curOffsetXFromParent) - childTreeLeftEdge;
+        
+        const childTopEdge = childNode.newRef.bounds.y - childNode.newRef.bounds.height/2; // This width might not be right - It should be top if it's rotated, plus the ref's not been updated since adjusting
+        offset.y = (parentBottomEdge+branchBuffer) - childTopEdge;
+
+        await moveNodeTreeBy(childNode, offset);
+
+        // Increment offset for next child node to be positioned
+        curOffsetXFromParent += childNode.treeWidth + levelBuffer;  // reduces horizontal spacing with each step down the tree
+    }
+
+    // Save and return so this nodes parent can position it and it's siblings
+    parentNode.treeWidth = thisTreeWidth;
+    return parentNode.treeWidth;
+
+}
+
+
+
+
+async function layOutNodesToLeft(parentNode, depth) {
+    const childNodes = parentNode.childNodesBefore || parentNode.childNodes;
+    const levelBuffer = LEVEL_BUFFER/(depth || 1);
+    const branchBuffer = BRANCH_BUFFER/(depth || 1);
+
+    // If there are no children, then it's a leaf node, so just size/rotate it and return it's width as it's treeWidth
+    if(childNodes.length <= 0) {
+        await createLeafNode(parentNode);
+        return parentNode.treeWidth;
+    }
+
+    // It's got children, so calculate them first to get the overall width
+    let thisTreeWidth = 0;
+    for( let k=0; k<childNodes.length; k++ ) {
+        const childNode = childNodes[k];
+        const childTreeWidth = await layOutNodesAbove( childNode, depth+1 );
+        thisTreeWidth += childTreeWidth;
+    }
+    thisTreeWidth += levelBuffer * (childNodes.length-1);
+
+    // Size the parent node so it will fit all the child trees
+    parentNode.newRef.bounds.width = parentNode.newRef.width = thisTreeWidth;
+    await miro.board.widgets.update({
+        ...parentNode.newRef
+    })
+
+    // Get relevant parent node edges for alignment
+    const parentLeftEdge = parentNode.newRef.bounds.x - parentNode.newRef.bounds.width/2;
+    const parentTopEdge = parentNode.newRef.bounds.y - parentNode.newRef.bounds.height/2;
+
+    // Move all children trees into position
+    let curOffsetXFromParent = 0;
+    for( let k=0; k<childNodes.length; k++ ) {
+        const childNode = childNodes[k];
+        const offset = {};
+
+        // Left boundary of the child node and all it's children as a group
+        const childTreeLeftEdge = childNode.newRef.bounds.x - childNode.treeWidth/2;
+        offset.x = (parentLeftEdge+curOffsetXFromParent) - childTreeLeftEdge;
+        
+        const childBottomEdge = childNode.newRef.bounds.y + childNode.newRef.bounds.height/2; // This width might not be right - It should be top if it's rotated, plus the ref's not been updated since adjusting
+        offset.y = (parentTopEdge-branchBuffer) - childBottomEdge;
+
+        await moveNodeTreeBy(childNode, offset);
+
+        // Increment offset for next child node to be positioned
+        curOffsetXFromParent += childNode.treeWidth + levelBuffer;  // reduces horizontal spacing with each step down the tree
+    }
+
+    // Save and return so this nodes parent can position it and it's siblings
+    parentNode.treeWidth = thisTreeWidth;
+    return parentNode.treeWidth;
+
+}
+
+
+
+async function layOutNodesToRight(parentNode, depth) {
+    const childNodes = parentNode.childNodesAfter || parentNode.childNodes;
+    const levelBuffer = LEVEL_BUFFER/(depth || 1);
+    const branchBuffer = BRANCH_BUFFER/(depth || 1);
+
+    // If there are no children, then it's a leaf node, so just size/rotate it and return it's width as it's treeWidth
+    if(childNodes.length <= 0) {
+        await createLeafNode(parentNode);
+        return parentNode.treeWidth;
+    }
+
+    // It's got children, so calculate them first to get the overall width
+    let thisTreeWidth = 0;
+    for( let k=0; k<childNodes.length; k++ ) {
+        const childNode = childNodes[k];
+        const childTreeWidth = await layOutNodesBelow( childNode, depth+1 );
+        thisTreeWidth += childTreeWidth;
+    }
+    thisTreeWidth += levelBuffer * (childNodes.length-1);
+
+    // Size the parent node so it will fit all the child trees
+    parentNode.newRef.bounds.width = parentNode.newRef.width = thisTreeWidth;
+    await miro.board.widgets.update({
+        ...parentNode.newRef
+    })
+
+    // Get relevant parent node edges for alignment
+    const parentLeftEdge = parentNode.newRef.bounds.x - parentNode.newRef.bounds.width/2;
+    const parentBottomEdge = parentNode.newRef.bounds.y + parentNode.newRef.bounds.height/2;
+
+    // Move all children trees into position
+    let curOffsetXFromParent = 0;
+    for( let k=0; k<childNodes.length; k++ ) {
+        const childNode = childNodes[k];
+        const offset = {};
+
+        // Left boundary of the child node and all it's children as a group
+        const childTreeLeftEdge = childNode.newRef.bounds.x - childNode.treeWidth/2;
+        offset.x = (parentLeftEdge+curOffsetXFromParent) - childTreeLeftEdge;
+        
+        const childTopEdge = childNode.newRef.bounds.y - childNode.newRef.bounds.height/2; // This width might not be right - It should be top if it's rotated, plus the ref's not been updated since adjusting
+        offset.y = (parentBottomEdge+branchBuffer) - childTopEdge;
+
+        await moveNodeTreeBy(childNode, offset);
+
+        // Increment offset for next child node to be positioned
+        curOffsetXFromParent += childNode.treeWidth + levelBuffer;  // reduces horizontal spacing with each step down the tree
+    }
+
+    // Save and return so this nodes parent can position it and it's siblings
+    parentNode.treeWidth = thisTreeWidth;
+    return parentNode.treeWidth;
+
+}
 
 
 
