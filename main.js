@@ -11,7 +11,7 @@ miro.onReady(() => {
     extensionPoints: {
       
       bottomBar: {
-        title: 'convert mind map 8',
+        title: 'convert mind map 9',
         svgIcon:
           '<circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2"/>',
         positionPriority: 1,
@@ -358,13 +358,18 @@ async function sizeNodeAndLayOutItsChildren(parentNode) {
 
     // If there are no children, then it's a leaf node, so just size/rotate it and return it's width for it's parent
     if(childNodes.length <= 0) {
-        parentNode.newRef.bounds.rotation = parentNode.newRef.rotation = 90;
+        // Apply the values to bounds correctly as reference
+        parentNode.newRef.bounds.rotation = 90;
         parentNode.newRef.bounds.height = parentNode.newRef.width = 400;
         parentNode.newRef.bounds.width = parentNode.newRef.height = 50;
+        // apply values to root ref to spreading to update call - dimension based on before rotation
+        parentNode.newRef.rotation = parentNode.newRef.bounds.rotation;
+        parentNode.newRef.width = parentNode.newRef.bounds.height;
+        parentNode.newRef.height = parentNode.newRef.bounds.width;
         await miro.board.widgets.update({
             ...parentNode.newRef
         })
-        parentNode.treeWidth = parentNode.newRef.bounds.height; // Because it's rotated
+        parentNode.treeWidth = parentNode.newRef.bounds.width;
         return parentNode.treeWidth;
     }
 
