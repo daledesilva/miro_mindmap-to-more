@@ -11,7 +11,7 @@ miro.onReady(() => {
     extensionPoints: {
       
       bottomBar: {
-        title: 'convert mind map 6',
+        title: 'convert mind map 7',
         svgIcon:
           '<circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2"/>',
         positionPriority: 1,
@@ -47,7 +47,7 @@ async function startMindMapConversion() {
 
         miro.showNotification('Mind map converted');
         console.log('mindMap', mindMap);
-        
+
     }, 2000)
 
     
@@ -312,7 +312,7 @@ async function createChildrenAbove(parentNode) {
 
 async function sizeNodeAndLayOutItsChildren(parentNode, depth) {
     const childNodes = parentNode.childNodesAfter || parentNode.childNodes;
-    const horzBuffer = HORZ_BUFFER/depth;
+    const horzBuffer = HORZ_BUFFER;///depth;
     const vertBuffer = VERT_BUFFER;
 
     // If there are no children, then it's a leaf node, so just size/rotate it and return it's width as it's treeWidth
