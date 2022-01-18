@@ -1,5 +1,5 @@
 
-const VERT_BUFFER = 150;
+const VERT_BUFFER = 50;
 const HORZ_BUFFER = 100;
 
 
@@ -11,7 +11,7 @@ miro.onReady(() => {
     extensionPoints: {
       
       bottomBar: {
-        title: 'convert mind map 3',
+        title: 'convert mind map 4',
         svgIcon:
           '<circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2"/>',
         positionPriority: 1,
@@ -313,7 +313,7 @@ async function createChildrenAbove(parentNode) {
 async function sizeNodeAndLayOutItsChildren(parentNode, depth) {
     const childNodes = parentNode.childNodesAfter || parentNode.childNodes;
     const horzBuffer = HORZ_BUFFER/(depth || 1);
-    const vertBuffer = VERT_BUFFER;
+    const vertBuffer = VERT_BUFFER/(depth || 1);
 
     console.log('horzBuffer', horzBuffer);
 
