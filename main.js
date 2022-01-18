@@ -44,9 +44,10 @@ async function startMindMapConversion() {
     setTimeout( async () => {
         
         await sizeNodeAndLayOutItsChildren(mindMap, 0);
-        miro.showNotification('Mind map converted');
 
+        miro.showNotification('Mind map converted');
         console.log('mindMap', mindMap);
+        
     }, 2000)
 
     
