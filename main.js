@@ -11,7 +11,7 @@ miro.onReady(() => {
     extensionPoints: {
       
       bottomBar: {
-        title: 'convert mind map 3',
+        title: 'convert mind map 4',
         svgIcon:
           '<circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2"/>',
         positionPriority: 1,
@@ -33,7 +33,7 @@ async function startMindMapConversion() {
     await createVerticalMindMap(mindMap)
 
     setTimeout( async () => {
-        await refineDownwardBranchLayout(mindMap);
+        await sizeNodeAndLayOutItsChildren(mindMap);
         miro.showNotification('Mind map converted');
 
         console.log('mindMap', mindMap);
@@ -321,16 +321,16 @@ async function refineDownwardBranchLayout(node) {
             width: treeWidth,
         })
 
-        await alignNodesUnderParent(node, childNodes);
+        await sizeNodeAndLayOutItsChildren(node, childNodes);
         
     } else {
-        await miro.board.widgets.update({
-            ...node.newRef,
-            // rotation: 90,
-            // width: 400,
-            // height: 50,
-        })
-        treeWidth = 50;
+        // await miro.board.widgets.update({
+        //     ...node.newRef,
+        //     // rotation: 90,
+        //     // width: 400,
+        //     // height: 50,
+        // })
+        // treeWidth = 50;
         // treeWidth = node.newRef.bounds.width;
     }
     node.treeWidth = treeWidth;
@@ -353,28 +353,50 @@ async function refineDownwardBranchLayout(node) {
 // }
 
 
-async function alignNodesUnderParent(parentNode) {
+async function sizeNodeAndLayOutItsChildren(parentNode) {
+    const childNodes = parentNode.childNodesAfter || parentNode.childNodes;
 
-    if(parentNode.childNodes.length <= 0) {
-        parentNode.treeWidth = parentNode.newRef.bounds.width;
+    // If there are no children, then it's a leaf node, so just size/rotate it and return it's width for it's parent
+    if(childNodes.length <= 0) {
+        parentNode.newRef.bounds.rotation = parentNode.newRef.rotation = 90;
+        parentNode.newRef.bounds.width = parentNode.newRef.width = 400;
+        parentNode.newRef.bounds.height = parentNode.newRef.height = 50;
+        await miro.board.widgets.update({
+            ...parentNode.newRef
+        })
+        parentNode.treeWidth = parentNode.newRef.bounds.height; // Because it's rotated
         return parentNode.treeWidth;
     }
 
-    // Move all children into position (their full trees based on their treeWidth)
-    for( let k=0; k<parentNode.childNodes.length; k++ ) {
+    // It's got children, so calculate them first to get the overall width
+    let thisTreeWidth = 0;
+    for( let k=0; k<childNodes.length; k++ ) {
         const childNode = parentNode.childNodes[k];
-        const childTreeWidth = await alignNodesUnderParent( childNode );
+        const childTreeWidth = await sizeNodeAndLayOutItsChildren( childNode );
+        thisTreeWidth += (k*HORZ_BUFFER) + childTreeWidth;
+    }
 
-        // Left edge of the parent node on it's own
-        const parentLeftEdge = parentNode.newRef.bounds.x - parentNode.newRef.bounds.width/2;
+    // Size the parent node so it will fit all the child trees
+    parentNode.newRef.bounds.width = parentNode.newRef.width = thisTreeWidth;
+    await miro.board.widgets.update({
+        ...parentNode.newRef
+    })
+
+    // Get relevant parent node edges for alignment
+    const parentLeftEdge = parentNode.newRef.bounds.x - parentNode.newRef.bounds.width/2;
+    const parentBottomEdge = parentNode.newRef.bounds.y + parentNode.newRef.bounds.height/2;
+
+    // Move all children trees into position
+    let curOffsetXFromParent = 0;
+    for( let k=0; k<childNodes.length; k++ ) {
+        const childNode = parentNode.childNodes[k];
 
         // Left boundary of the child node and all it's children as a group
-        const childTreeLeftEdge = childNode.newRef.bounds.x - childNode.treeWidth/2; // TODO: This width might not be right - It should be top if it's rotated, plus the ref's not been updated since adjusting
-        const offsetX = parentLeftEdge - childTreeLeftEdge; // TODO: This will move all children to start of parent node - it needs to iteratively add on to each on
-        const parentBottomEdge = parentNode.newRef.bounds.y + parentNode.newRef.bounds.height/2;
+        const childTreeLeftEdge = childNode.newRef.bounds.x - childNode.treeWidth/2;
+        const offsetX = (parentLeftEdge+curOffsetXFromParent) - childTreeLeftEdge;
+        
         const childTopEdge = childNode.newRef.bounds.y - childNode.newRef.bounds.height/2; // This width might not be right - It should be top if it's rotated, plus the ref's not been updated since adjusting
-        const offsetY = parentBottomEdge - childTopEdge + VERT_BUFFER;
-
+        const offsetY = (parentBottomEdge+VERT_BUFFER) - childTopEdge;
 
         childNode.newRef.x += offsetX;
         childNode.newRef.y += offsetY;
@@ -383,7 +405,8 @@ async function alignNodesUnderParent(parentNode) {
             ...childNode.newRef,
         })        
 
-        
+        // Increment offset for next child node to be positioned
+        curOffsetXFromParent += childNode.treeWidth + HORZ_BUFFER;
     }
 
 }
