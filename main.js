@@ -11,7 +11,7 @@ miro.onReady(() => {
     extensionPoints: {
       
       bottomBar: {
-        title: 'convert mind map 8',
+        title: 'convert mind map 9',
         svgIcon:
           '<circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2"/>',
         positionPriority: 1,
@@ -30,26 +30,30 @@ miro.onReady(() => {
 async function startMindMapConversion() {
 
     const mindMap = await getMindMap();
-    await createVerticalMindMap(mindMap)
+    await createVerticalMindMap(mindMap);
     
-    console.log('startConversion -- mindMap.newRef', mindMap.newRef);
-    console.log('startConversion -- mindMap.newRef.plainText', mindMap.newRef.plainText);
-    console.log('startConversion -- mindMap.childNodesAfter[0].newRef', mindMap.childNodesAfter[0].newRef);
-    console.log('startConversion -- mindMap.childNodesAfter[0].newRef.plainText', mindMap.childNodesAfter[0].newRef.plainText);
+    
 
-    await sizeNodeAndLayOutItsChildren(mindMap);
-    miro.showNotification('Mind map converted');
+    // await sizeNodeAndLayOutItsChildren(mindMap);
+    // miro.showNotification('Mind map converted');
 
     // console.log('mindMap', mindMap);
 
 
 
-    // setTimeout( async () => {
-    //     await sizeNodeAndLayOutItsChildren(mindMap);
-    //     miro.showNotification('Mind map converted');
+    setTimeout( async () => {
 
-    //     console.log('mindMap', mindMap);
-    // }, 1000)
+        console.log('startConversion -- mindMap.newRef', mindMap.newRef);
+        console.log('startConversion -- mindMap.newRef.plainText', mindMap.newRef.plainText);
+        console.log('startConversion -- mindMap.childNodesAfter[0].newRef', mindMap.childNodesAfter[0].newRef);
+        console.log('startConversion -- mindMap.childNodesAfter[0].newRef.plainText', mindMap.childNodesAfter[0].newRef.plainText);
+
+
+        await sizeNodeAndLayOutItsChildren(mindMap);
+        miro.showNotification('Mind map converted');
+
+        console.log('mindMap', mindMap);
+    }, 1000)
 
     
 }
