@@ -1,8 +1,9 @@
 
 const PARENT_MARGIN = 0;
-const SIBLING_MARGIN = 150;
+const SIBLING_MARGIN = 50;
 
 
+const LEAF_WIDTH = 400;
 
 function styleBranchNode(ref, depth) {
     
@@ -28,6 +29,11 @@ function styleLeafNode(ref) {
 }
 
 
+function adjustHorzLayoutWidth(node, depth) {
+    node.width = node.bounds.width = LEAF_WIDTH*1.5/depth;
+}
+
+
 
 
 miro.onReady(() => {
@@ -36,7 +42,7 @@ miro.onReady(() => {
     extensionPoints: {
       
       bottomBar: {
-        title: 'convert mind map 7',
+        title: 'convert mind map 8',
         svgIcon:
           '<circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2"/>',
         positionPriority: 1,
@@ -367,7 +373,7 @@ async function layOutHorizontalMindMap(rootNode) {
 async function createLeafNodeRotated(node) {
     // Apply the values to bounds correctly as reference
     node.newRef.bounds.rotation = 90;
-    node.newRef.bounds.height = 400;
+    node.newRef.bounds.height = LEAF_WIDTH;
     node.newRef.bounds.width = 50;
     // apply values to root ref to spreading to update call - dimension based on before rotation
     node.newRef.rotation = node.newRef.bounds.rotation;
@@ -384,7 +390,7 @@ async function createLeafNodeRotated(node) {
 
 async function createLeafNode(node) {
     node.newRef.bounds.height = 50;
-    node.newRef.bounds.width = 400;
+    node.newRef.bounds.width = LEAF_WIDTH;
     node.newRef.rotation = node.newRef.bounds.rotation;
     node.newRef.width = node.newRef.bounds.width;
     node.newRef.height = node.newRef.bounds.height;
@@ -541,6 +547,7 @@ async function layOutNodesToLeft(parentNode, depth) {
 
     // Size the parent node so it will fit all the child trees
     parentNode.newRef.bounds.height = parentNode.newRef.height = thisTreeHeight;
+    adjustHorzLayoutWidth(parentNode.newRef, depth);
     styleBranchNode(parentNode.newRef, depth);
     await miro.board.widgets.update({
         ...parentNode.newRef
@@ -601,6 +608,7 @@ async function layOutNodesToRight(parentNode, depth) {
 
     // Size the parent node so it will fit all the child trees
     parentNode.newRef.bounds.height = parentNode.newRef.height = thisTreeHeight;
+    adjustHorzLayoutWidth(parentNode.newRef, depth);
     styleBranchNode(parentNode.newRef, depth);
     await miro.board.widgets.update({
         ...parentNode.newRef
