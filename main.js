@@ -14,11 +14,11 @@ function styleBranchNode(ref, depth) {
     if( isEvenParent ) {
         ref.style.backgroundColor = "#12CDD4";
         ref.style.textColor = "#FFFFFF";
-        ref.style.fontSize = 48;
+        ref.style.fontSize = 80/(depth || 1);
     } else {
         ref.style.backgroundColor = "#2D9BF0";
         ref.style.textColor = "#FFFFFF";
-        ref.style.fontSize = 80;
+        ref.style.fontSize = 80/(depth || 1);
     }
 }
 
@@ -30,7 +30,7 @@ function styleLeafNode(ref) {
 
 
 function adjustHorzLayoutWidth(node, depth) {
-    node.width = node.bounds.width = LEAF_WIDTH*1.5/depth;
+    node.width = node.bounds.width = LEAF_WIDTH*1.5/(depth || 1);
 }
 
 
@@ -42,7 +42,7 @@ miro.onReady(() => {
     extensionPoints: {
       
       bottomBar: {
-        title: 'convert mind map 8',
+        title: 'convert mind map 9',
         svgIcon:
           '<circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2"/>',
         positionPriority: 1,
