@@ -11,7 +11,7 @@ miro.onReady(() => {
     extensionPoints: {
       
       bottomBar: {
-        title: 'convert mind map 4',
+        title: 'convert mind map 5',
         svgIcon:
           '<circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2"/>',
         positionPriority: 1,
@@ -368,9 +368,6 @@ async function createChildrenAbove(parentNode) {
 async function sizeNodeAndLayOutItsChildren(parentNode) {
     const childNodes = parentNode.childNodesAfter || parentNode.childNodes;
 
-    console.log('parentNode', parentNode);
-    console.log('sizeNodeAndLayout -- parentNode.newRef.plainText', parentNode.newRef.plainText);
-
     // If there are no children, then it's a leaf node, so just size/rotate it and return it's width as it's treeWidth
     if(childNodes.length <= 0) {
         // Apply the values to bounds correctly as reference
@@ -379,7 +376,7 @@ async function sizeNodeAndLayOutItsChildren(parentNode) {
         parentNode.newRef.bounds.width = 50;
         // apply values to root ref to spreading to update call - dimension based on before rotation
         parentNode.newRef.rotation = parentNode.newRef.bounds.rotation;
-        parentNode.newRef.width = parentNode.newRef.bounds.height;
+        parentNode.newRef.width = parentNode.newRef.bounds.height;  // These are swapped because of the rotation
         parentNode.newRef.height = parentNode.newRef.bounds.width;
         await miro.board.widgets.update({
             ...parentNode.newRef
@@ -393,8 +390,9 @@ async function sizeNodeAndLayOutItsChildren(parentNode) {
     for( let k=0; k<childNodes.length; k++ ) {
         const childNode = childNodes[k];
         const childTreeWidth = await sizeNodeAndLayOutItsChildren( childNode );
-        thisTreeWidth += (k*HORZ_BUFFER) + childTreeWidth;
+        thisTreeWidth += childTreeWidth;
     }
+    thisTreeWidth += HORZ_BUFFER * childNodes.length-1;
 
     // Size the parent node so it will fit all the child trees
     parentNode.newRef.bounds.width = parentNode.newRef.width = thisTreeWidth;
@@ -418,12 +416,6 @@ async function sizeNodeAndLayOutItsChildren(parentNode) {
         const childTopEdge = childNode.newRef.bounds.y - childNode.newRef.bounds.height/2; // This width might not be right - It should be top if it's rotated, plus the ref's not been updated since adjusting
         const offsetY = (parentBottomEdge+VERT_BUFFER) - childTopEdge;
 
-        console.log('parentBottomEdge', parentBottomEdge);
-        console.log('VERT_BUFFER', VERT_BUFFER);
-        console.log('childTopEdge', childTopEdge);
-        console.log('offsetY', offsetY);
-        console.log('childNode.newRef.y', childNode.newRef.y);
-
         childNode.newRef.x += offsetX;
         childNode.newRef.y += offsetY;
 
@@ -434,6 +426,9 @@ async function sizeNodeAndLayOutItsChildren(parentNode) {
         // Increment offset for next child node to be positioned
         curOffsetXFromParent += childNode.treeWidth + HORZ_BUFFER;
     }
+
+    // Return so this nodes parent can position it and it's siblings
+    return thisTreeWidth;
 
 }
 
